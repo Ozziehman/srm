@@ -1,0 +1,34 @@
+{
+    "missing_surface": "#e74c3c",
+    "unknown_surface": "#8e44ad",
+
+    "surfaces": {
+        "asphalt": "#2c3e50",
+        "paved": "#4b6584",
+        "concrete": "#95a5a6",
+        "concrete:lanes": "#95a5a6",
+        "concrete:plates": "#95a5a6",
+        "paving_stones": "#778ca3",
+        "sett": "#d1d8e0",
+        "cobblestone": "#a5b1c2",
+        "unhewn_cobblestone": "#a5b1c2",
+        "grass": "#20bf6b",
+        "metal": "#45aaf2",
+        "wood": "#cc8e35",
+        "stepping_stones": "#84817a",
+        "unpaved": "#aaa69d",
+        "compacted": "#f7f1e3",
+        "fine_gravel": "#576574",
+        "gravel": "#576574",
+        "rock": "#8395a7",
+        "pebblestone": "#8395a7",
+        "earth": "#92400e",
+        "ground": "#92400e",
+        "dirt": "#92400e",
+        "soil": "#92400e",
+        "mud": "#92400e",
+        "sand": "#facc15",
+        "missing_surface": "#e74c3c",
+        "unknown": "#8e44ad"
+    }
+}

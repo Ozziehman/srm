@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %} {% endblock %} — SRM
+        </title>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"/>
+        <link rel="stylesheet" href="{{ url_for('core.static', filename='css/srm.css') }}">
+        
+        <link rel="shortcut icon" href="{{ url_for('core.static', filename='ico/srm-favicon.ico') }}" type="image/x-icon">
+
+        <script src="https://cdn.tailwindcss.com?plugins=forms"></script> <!-- replace w/ npm later -->
+    </head>
+    <body class="h-full">
+        
+        <div class="h-screen grid grid-cols-5">
+
+            <div class="col-span-1">
+                <div class="h-full bg-slate-700">
+                    {% include "/Includes/branding.html" %}
+
+                    <div class="mt-6 p-4">
+                        {% block analytics %} {% endblock %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-span-4">
+                {% include "/Includes/topbar.html" %}
+                <div id="map" class="w-full srm-map"></div>
+
+                <div id="context-menu">
+                    <a onclick="setPosition('start')">
+                        <div class="item font-bold text-white">
+                            Start hier
+                        </div>
+                    </a>
+                    <a onclick="setPosition('end')">
+                        <div class="item font-bold text-whit">
+                            Eindig hier
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <input type="hidden" name="lastclickedposition" id="lastclickedposition" value=""/>
+
+        <script src="{{ url_for('core.static', filename='js/lib/leaflet.js') }}"></script>
+        <script src="{{ url_for('core.static', filename='js/srm_interactive_map.js') }}"></script>
+        <script src="{{ url_for('core.static', filename='js/map_contextmenu.js') }}"></script>
+
+        {% block js %}
+        {% endblock %}
+    </body>
+</html>

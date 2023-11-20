@@ -1,0 +1,44 @@
+{% extends "Layouts/base.html" %}
+
+{% block title %} Planner {% endblock %}
+
+{% block analytics %}
+    <p class="text-white">
+        <span class="font-bold">Lengte van de route</span>
+        <span class="block">{{ path_length }}km</span>
+    </p>
+
+    <p class="text-white mt-4">
+        <span class="font-bold">Type wegdek (<a id="surfaceDistLink" class="underline cursor-pointer" onclick="toggleSurfaceDist()">visualiseer</a>)</span>
+        {% for surface in surfaces %}
+            <div>
+                <div class="h-4 w-4 border border-[{{ surfaceDistLegenda[surface] }}] inline mr-1"></div>
+                <span class="text-white inline">{{ surface }} (~{{ surfaces[surface] }}km)</span>
+            </div>
+        {% endfor %}
+    </p>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var surfaceDistLines = {{ surfaceDistVisualisation|tojson }}
+        var simplePolylines = {{ routeVisualisation|tojson }}
+        
+        surfaceDistribution = L.featureGroup([]).addTo(map)
+        simpleVisualisation = L.featureGroup([]).addTo(map)
+
+        for (line in surfaceDistLines) {
+            surfaceDistribution.addLayer( L.polyline(surfaceDistLines[line]['geometry'], { color: surfaceDistLines[line]['targetColor'], opacity: 1, weight: 5 }) );
+        }
+
+        for (line in simplePolylines) {
+            simpleVisualisation.addLayer( L.polyline(simplePolylines[line]['geometry'], { color: "#7ed6df", opacity: 1, weight: 5 }) );
+        }
+
+        function toggleSurfaceDist()
+        {
+            map.hasLayer(simpleVisualisation) ? map.removeLayer(simpleVisualisation) : map.addLayer(simpleVisualisation);
+        }
+
+    </script>
+{% endblock %}
