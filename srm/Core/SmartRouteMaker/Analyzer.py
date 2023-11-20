@@ -71,3 +71,7 @@ class Analyzer:
         ]
 
         return ox.utils_graph.get_route_edge_attributes(graph, path)
+    
+    
+
+    

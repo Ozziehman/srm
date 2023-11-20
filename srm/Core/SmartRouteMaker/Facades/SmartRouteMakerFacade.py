@@ -2,6 +2,11 @@ import json
 from turtle import st
 from typing import Tuple
 
+#this is to be moved to a different file when the height calculation is working
+import osmnx as ox
+import networkx as nx
+import requests
+
 from ...SmartRouteMaker import Analyzer
 from ...SmartRouteMaker import Visualizer
 from ...SmartRouteMaker import Graph
@@ -32,10 +37,41 @@ class SmartRouteMakerFacade():
 
         graph = self.graph.full_geometry_point_graph(start_coordinates)
 
+        # Get start/end nodes closest to the coordinates filled in the form
         start_node = self.graph.closest_node(graph, start_coordinates)
         end_node = self.graph.closest_node(graph, end_coordinates)
 
+        # Get shortest path between start and end node
         path = self.planner.shortest_path(graph, start_node, end_node)
+        
+        nodeElevation = []
+
+        #this is to be moved to a different file when the height calculation is working
+        for graphNode in path:
+            node = graph.nodes[graphNode]
+            nodeLat = node['y']
+            nodeLon = node['x']
+            api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
+
+            # Make the API call
+            response = requests.get(api_url)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                nodeElevation.append(response.json())
+            else:
+                print(f"Error making API call to {api_url}. Status code: {response.status_code}")
+        for i in nodeElevation:
+            print(i)
+
+        # this is a collection of all the nodes that are in the route (including the start and end node) turn these nodes into coordinates
+        # to get the lat & lon of the node, this can be used in an API for example: https://open-meteo.com/en/docs/elevation-api
+
+        # Right now im thinking of generating 3-5 different routes and then picking the one with the closest elevation difference to the inputted elevation difference
+        # It is pretty impossible and unlikely to get the exact elevation with the exact distance and vice versa. So we need to find a balance between the two.
+
+        # Begin with getting the elevation after generating the routes.
+
         path_length = self.analyzer.shortest_path_length(graph, start_node, end_node)
 
         if "analyze" in options and options['analyze']:
@@ -56,7 +92,6 @@ class SmartRouteMakerFacade():
             surface_dist_visualisation = None
         
         simple_polylines = self.visualizer.extract_polylines_from_folium_map(graph, path, invert=False)
-
         output = {
             "start_node": start_node,
             "end_node": end_node,
