@@ -44,7 +44,7 @@ class SmartRouteMakerFacade():
         # Get shortest path between start and end node
         path = self.planner.shortest_path(graph, start_node, end_node)
         
-        nodeElevation = []
+        elevation_nodes = []
 
         #this is to be moved to a different file when the height calculation is working
         for graphNode in path:
@@ -58,10 +58,10 @@ class SmartRouteMakerFacade():
 
             # Check if the request was successful
             if response.status_code == 200:
-                nodeElevation.append(response.json())
+                elevation_nodes.append(response.json())
             else:
                 print(f"Error making API call to {api_url}. Status code: {response.status_code}")
-        for i in nodeElevation:
+        for i in elevation_nodes:
             print(i)
 
         # this is a collection of all the nodes that are in the route (including the start and end node) turn these nodes into coordinates
@@ -101,7 +101,8 @@ class SmartRouteMakerFacade():
             "surface_dist": surface_dist,
             "surface_dist_visualisation": surface_dist_visualisation,
             "surface_dist_legenda": surface_dist_legenda,
-            "simple_polylines": simple_polylines
+            "simple_polylines": simple_polylines,
+            "elevation_nodes": elevation_nodes
         }
 
         return output

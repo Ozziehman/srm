@@ -28,5 +28,6 @@ def handle_routing():
         surfaceDistLegenda=route['surface_dist_legenda'],
         surfaceDistVisualisation=route['surface_dist_visualisation'],
         path_length=route['path_length'],
+        elevation_nodes=route['elevation_nodes'],
         routeVisualisation=route['simple_polylines']
     )

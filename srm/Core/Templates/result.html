@@ -17,6 +17,14 @@
             </div>
         {% endfor %}
     </p>
+    <p class="text-white mt-4">
+        <span class="font-bold">Hoogtes</span>
+        {% for node in elevation_nodes %}
+            <div>
+                <span class="text-white inline">{{ node }}</span>
+            </div>
+        {% endfor %}
+    </p>
 {% endblock %}
 
 {% block js %}
