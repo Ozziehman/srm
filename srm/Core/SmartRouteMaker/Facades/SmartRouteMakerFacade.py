@@ -63,8 +63,8 @@ class SmartRouteMakerFacade():
                 elevation_nodes.append(response.json())
             else:
                 print(f"Error making API call to {api_url}. Status code: {response.status_code}")
-        for i in elevation_nodes:
-            print(i)
+        #for i in elevation_nodes:
+        #    print(i)
 
         # this is a collection of all the nodes that are in the route (including the start and end node) turn these nodes into coordinates
         # to get the lat & lon of the node, this can be used in an API for example: https://open-meteo.com/en/docs/elevation-api
@@ -181,8 +181,8 @@ class SmartRouteMakerFacade():
         path = cyclus
 
         #test print
-        for x in path:
-            print(x)
+        #for x in path:
+        #    print(x)
 
         elevation_nodes = []
 
