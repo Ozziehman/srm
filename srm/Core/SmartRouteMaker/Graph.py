@@ -43,6 +43,7 @@ class Graph:
             'lon', 'lat'
         ]
 
+        # Download graph and convert to nodes and edges
         graph = ox.graph_from_point(coordinates, radius, network_type=type)
         nodes, edges = ox.graph_to_gdfs(graph, fill_edge_geometry=True)
         
@@ -59,4 +60,6 @@ class Graph:
             int: Unique ID of the closest node in the graph.
         """
 
-        return ox.nearest_nodes(graph, coordinates[1], coordinates[0])        
+        return ox.nearest_nodes(graph, coordinates[1], coordinates[0])     
+
+      
