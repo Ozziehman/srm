@@ -72,18 +72,6 @@ class Analyzer:
 
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
-    def calculate_path_length(graph, nodes: list):
-        """Calculates the length of a path between all nodes in a given path. NOT TESTED YET!"""
-        path_length = 0
-
-        # Iterate through the list of node IDs
-        for i in range(len(nodes) - 1):
-            # Use OSM API to get edge information, including length
-            edge_info = ox.geocode_edge(graph, nodes[i], nodes[i + 1])
-            edge_length = edge_info[0]['length']
-            path_length += edge_length
-
-        return path_length 
     
     
 

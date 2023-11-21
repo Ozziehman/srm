@@ -113,7 +113,7 @@ class SmartRouteMakerFacade():
 
 
     #Circular route
-    def plan_circuit(self, start_coordinates, options: dict, max_length: int) -> dict:
+    def plan_circular_route(self, start_coordinates, max_length: int, options: dict) -> dict:
         """Generates a circular path on a given graph, 
         starting from a specified set of coordinates. 
         The algorithm utilizes geometric calculations to determine the direction 
@@ -201,10 +201,12 @@ class SmartRouteMakerFacade():
                 elevation_nodes.append(response.json())
             else:
                 print(f"Error making API call to {api_url}. Status code: {response.status_code}")
-        for i in elevation_nodes:
-            print(i)
-
-        path_length = self.analyzer.calculate_path_length(graph, path)
+        #for i in elevation_nodes:
+        #    print(i)
+        """Next part is still being worked on (current error: TypeError: Analyzer.calculate_path_length() takes 2 positional arguments but 3 were given )"""
+        #path_length = self.analyzer.calculate_path_length(graph, path)
+        path_length = 999999
+       
 
         # Visualize the route
         if "analyze" in options and options['analyze']:
@@ -235,7 +237,8 @@ class SmartRouteMakerFacade():
             "surface_dist": surface_dist,
             "surface_dist_visualisation": surface_dist_visualisation,
             "surface_dist_legenda": surface_dist_legenda,
-            "simple_polylines": simple_polylines
+            "simple_polylines": simple_polylines,
+            "elevation_nodes": elevation_nodes
         }
 
         return output
