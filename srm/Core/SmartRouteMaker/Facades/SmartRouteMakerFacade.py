@@ -161,10 +161,10 @@ class SmartRouteMakerFacade():
             difference_lat = math.sin(degree) * radius / 111000
             y = float(graph.nodes[center]["y"]) + float(difference_lat)
             x = float(graph.nodes[center]["x"]) + float(difference_lon)
-            cirkel_node = ox.nearest_nodes(graph, x, y)
+            circle_node = ox.nearest_nodes(graph, x, y)
 
-            points_data[cirkel_node] = graph.nodes[cirkel_node]
-            points.append(cirkel_node)
+            points_data[circle_node] = graph.nodes[circle_node]
+            points.append(circle_node)
 
         # Calculate the route between the previously selected points
         cyclus = []
@@ -175,7 +175,7 @@ class SmartRouteMakerFacade():
                 j = 0
             for node in self.planner.shortest_path(graph, points[i], points[j]):
                 cyclus.append(node)
-
+            #remove last node because the last 2 nodes are the same
             cyclus.pop(-1)
 
         path = cyclus
