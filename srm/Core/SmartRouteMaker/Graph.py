@@ -24,7 +24,7 @@ class Graph:
 
         return ox.graph_from_point(coordinates, radius, network_type=type)
     
-    def full_geometry_point_graph(self, coordinates: tuple, radius: int = 2500, type: str = "bike") -> MultiDiGraph:
+    def full_geometry_point_graph(self, coordinates: tuple, radius: int = 5000, type: str = "bike") -> MultiDiGraph:
         """Creates a MultiDiGraph that contains all geometry attributes from a set of coordinates and a radius.
 
         Args:
@@ -62,4 +62,4 @@ class Graph:
 
         return ox.nearest_nodes(graph, coordinates[1], coordinates[0])     
 
-      
+
