@@ -85,6 +85,52 @@ class SmartRouteMakerFacade():
         return output
 
 
+    # Own algorithm here, flower idea
+    def plan_circular_route_flower(self, start_coordinates, max_length: int, options: dict) -> dict:
+        """Generates a flower like structure on a given graph with circles
+        which centers are N NE NW S SE SW E W of the starting node. On each circle the algorithm
+        places 4 (or more, depending on future ideas) point which are used for making a route."""
+
+        leafs = 8
+        points_per_leaf = 4
+        # Load the graph
+        graph = self.graph.full_geometry_point_graph(start_coordinates)
+
+        # Determine the start node based on the start coordinates
+        start_node = self.graph.closest_node(graph, start_coordinates)
+
+        # Has impact on the size of the circles(leafs)
+        variance = 1
+
+        # Generate array of 360 equal sized angles, basically a circle, duhh
+        angle = np.linspace(0, 2 * np.pi, 360)
+
+        # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle
+        for i in range (0, leafs):
+            direction = angle[i*(360/leafs)]
+            
+            # Calculate how far to go in a direction according to the given length of the route
+            radius = (max_length) / (2 * math.pi)
+
+            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat
+            difference_lat = math.sin(direction) * radius * variance / 111000
+            difference_lon = math.cos(direction) * radius * variance / 111000
+            
+            lon_leaf_center = float(graph.nodes[start_node]["x"]) + float(difference_lon)
+            lat_leaf_center = float(graph.nodes[start_node]["y"]) + float(difference_lat)
+            
+
+            # Get the node closest to the center of the leaf
+            leaf_center_node = self.graph.closest_node(graph, (lat_leaf_center, lon_leaf_center)) # lat = y, lon = x
+            
+            leaf_nodes_data = dict()
+            leaf_nodes = []
+
+            # Generate the desired number of points on the circle and calculate the corresponding node
+            angle = np.linspace(0, 2 * np.pi, points_per_leaf)
+
+            # Create a circle around the current leaf_center_node, and create points on this leaf to make a route
+            
 
 
     #Circular route
@@ -120,6 +166,7 @@ class SmartRouteMakerFacade():
         difference_lat = math.sin(direction) * radius * variance / 111000
         x = float(graph.nodes[start_node]["x"]) + float(difference_lon)
         y = float(graph.nodes[start_node]["y"]) + float(difference_lat)
+
         center = ox.nearest_nodes(graph, x, y)
 
         circle_dpoints = i_points

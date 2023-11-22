@@ -76,17 +76,16 @@ class Analyzer:
     def calculate_elevation_diff(self, graph, path) -> float:
 
         elevation_nodes = []
-        #Getting the elevation of the nodes in the path
+        #get elevation for each node from api
         for graphNode in path:
             node = graph.nodes[graphNode]
+            print(graph.nodes[graphNode])
             nodeLat = node['y']
             nodeLon = node['x']
             api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
 
-            # Make the API call
             response = requests.get(api_url)
 
-            # Check if the request was successful
             if response.status_code == 200:
                 elevation_nodes.append(response.json())
             else:
