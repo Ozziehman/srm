@@ -46,33 +46,8 @@ class SmartRouteMakerFacade():
         # Get shortest path between start and end node
         path = self.planner.shortest_path(graph, start_node, end_node)
         
-        elevation_nodes = []
 
-        #Getting the elevation of the nodes in the path
-        for graphNode in path:
-            node = graph.nodes[graphNode]
-            nodeLat = node['y']
-            nodeLon = node['x']
-            api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
-
-            # Make the API call
-            response = requests.get(api_url)
-
-            # Check if the request was successful
-            if response.status_code == 200:
-                elevation_nodes.append(response.json())
-            else:
-                print(f"Error making API call to {api_url}. Status code: {response.status_code}")
-        #for i in elevation_nodes:
-        #    print(i)
-
-        # this is a collection of all the nodes that are in the route (including the start and end node) turn these nodes into coordinates
-        # to get the lat & lon of the node, this can be used in an API for example: https://open-meteo.com/en/docs/elevation-api
-
-        # Right now im thinking of generating 3-5 different routes and then picking the one with the closest elevation difference to the inputted elevation difference
-        # It is pretty impossible and unlikely to get the exact elevation with the exact distance and vice versa. So we need to find a balance between the two.
-
-        # Begin with getting the elevation after generating the routes.
+        elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
         path_length = self.analyzer.shortest_path_length(graph, start_node, end_node)
 
@@ -131,7 +106,7 @@ class SmartRouteMakerFacade():
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates)
 
-        variance = 0.9
+        variance = 1
 
         # Provide 360 possible directions, choose a direction
         angle = np.linspace(0, 2 * np.pi, 360)
@@ -184,27 +159,8 @@ class SmartRouteMakerFacade():
         #for x in path:
         #    print(x)
 
-        elevation_nodes = []
+        elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
-        #Getting the elevation of the nodes in the path
-        for graphNode in path:
-            node = graph.nodes[graphNode]
-            nodeLat = node['y']
-            nodeLon = node['x']
-            api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
-
-            # Make the API call
-            response = requests.get(api_url)
-
-            # Check if the request was successful
-            if response.status_code == 200:
-                elevation_nodes.append(response.json())
-            else:
-                print(f"Error making API call to {api_url}. Status code: {response.status_code}")
-        #for i in elevation_nodes:
-        #    print(i)
-        """Next part is still being worked on (current error: TypeError: Analyzer.calculate_path_length() takes 2 positional arguments but 3 were given )"""
-        #path_length = self.analyzer.calculate_path_length(graph, path)
         path_length = 999999
        
 
