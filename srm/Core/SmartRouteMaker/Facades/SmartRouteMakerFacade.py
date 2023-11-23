@@ -171,6 +171,9 @@ class SmartRouteMakerFacade():
             #remove last node because the last in the final case it adds the last and the last, so it adds twice causing an error in the pathgeneration
             path.pop(-1)
         print(path)
+        #__________________________________________
+        # Delete nodes between 2 duplicates to kill off any weird appendages in the route???
+        #__________________________________________
         
         path_length = 999
         elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
