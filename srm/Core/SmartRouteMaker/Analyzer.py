@@ -79,7 +79,6 @@ class Analyzer:
         #get elevation for each node from api
         for graphNode in path:
             node = graph.nodes[graphNode]
-            print(graph.nodes[graphNode])
             nodeLat = node['y']
             nodeLon = node['x']
             api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
