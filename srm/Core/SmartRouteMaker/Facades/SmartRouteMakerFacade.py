@@ -94,7 +94,7 @@ class SmartRouteMakerFacade():
         print("flower route")
 
         leafs = 8
-        points_per_leaf = 4
+        points_per_leaf = 3
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates)
         
@@ -173,9 +173,12 @@ class SmartRouteMakerFacade():
         print(path)
         #__________________________________________
         # Delete nodes between 2 duplicates to kill off any weird appendages in the route???
+        #path = self.analyzer.remove_appendage_nodes(path)
+        #print(path)
         #__________________________________________
         
         path_length = 999
+
         elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
             # Visualize the route

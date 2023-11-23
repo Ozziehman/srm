@@ -93,5 +93,18 @@ class Analyzer:
         #    print(i)
         return elevation_nodes
     
+    def remove_appendage_nodes(self, lst):
+        result = []
+        seen = set()
+        for item in lst:
+            if item not in seen:
+                seen.add(item)
+                result.append(item)
+            else:
+                # Remove the nodes in between the two duplicate nodes id's
+                result = result[:result.index(item)] + [item]
+                seen = {item}
+        return result
+    
 
     
