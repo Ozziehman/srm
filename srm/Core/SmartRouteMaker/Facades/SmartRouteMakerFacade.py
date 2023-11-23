@@ -171,6 +171,7 @@ class SmartRouteMakerFacade():
             #remove last node because the last in the final case it adds the last and the last, so it adds twice causing an error in the pathgeneration
             path.pop(-1)
         print(path)
+        
         path_length = 999
         elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
@@ -209,12 +210,6 @@ class SmartRouteMakerFacade():
 
         return output
 
-
-
-
-        
-        
-        
     def normalize_coordinates(self, coordinates: str, delimiter: str = ",") -> Tuple:
             """Converts a front-end inputted coordinate string into a tuple of two floats.
 
@@ -228,7 +223,7 @@ class SmartRouteMakerFacade():
 
             return tuple([float(coordinate.strip()) for coordinate in coordinates.split(delimiter)])  
 
-    #Circular route
+    '''#Circular route
     def plan_circular_route(self, start_coordinates, max_length: int, options: dict) -> dict:
         """Generates a circular path on a given graph, 
         starting from a specified set of coordinates. 
@@ -340,7 +335,7 @@ class SmartRouteMakerFacade():
         }
 
         return output
-
+'''
 
 
 
