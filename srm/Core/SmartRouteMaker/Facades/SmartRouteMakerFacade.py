@@ -94,21 +94,23 @@ class SmartRouteMakerFacade():
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
-        leafs = 12
+        leafs = 24
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 12
+        points_per_leaf = 8
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
-        variance = 1.2
+        variance = 1
+        additonal_radius = 3 #used for loading in a larger graph than necessary for more headroom
         
         # Load the graph
-        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + .5)) #create a slightly larger map than necessary for more headroom
+        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_radius)) #create a slightly larger map than necessary for more headroom
         
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
-        print("(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
+        print("Start: ", "(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
+        print("Inputted route length: ", max_length)
         print("...........................................")
        
 
@@ -124,7 +126,8 @@ class SmartRouteMakerFacade():
             start_point_index = ((flower_angle * (180 / math.pi))/360) * points_per_leaf + (points_per_leaf/2)
             if start_point_index >= points_per_leaf:
                 start_point_index = start_point_index - points_per_leaf
-            print("Unrounded start_point index: ", start_point_index)
+            #test print
+            #print("Unrounded start_point index: ", start_point_index)
 
             flower_direction = flower_angle
 
@@ -139,7 +142,8 @@ class SmartRouteMakerFacade():
 
             # Get the node closest to the center of the leaf
             leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
-            print("leaf_center: ", "(", graph.nodes[leaf_center_node]["x"], ",",  graph.nodes[leaf_center_node]["y"], ")")
+            #test print
+            #print("leaf_center: ", "(", graph.nodes[leaf_center_node]["x"], ",",  graph.nodes[leaf_center_node]["y"], ")")
             # generate leaf angles depending on the numbe of leafs to be generated
             leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
             #create leaf nodes list for each leaf
@@ -170,32 +174,63 @@ class SmartRouteMakerFacade():
             # add the gathered leaf nodes to the leaf_paths list and repeat loop for next leaf   
             leaf_paths.append(leaf_nodes) # will end up with 1 extra node, that is the starting node
 
-            for i in leaf_nodes:
-                print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            print("__________________________________________________________")
+            #test print
+            #for i in leaf_nodes:
+            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
+            #print("__________________________________________________________")
 
 
-        # testing area: START
-        path = []
-        path_lenths = []
+        # Area for making the actual path and adding it into the paths list for evaluation
+        paths = []
+        path_lengths = []
         #_________________________________________________________
-        #This needs to iterate over all paths and look for the best match with the user input choices!!
-        #_________________________________________________________
-        temp_path = leaf_paths[0]
-
-        # Loop through all shortest paths between the point and add them to 1 path (cyclus)
-        for i in range(0, len(temp_path) - 1):
-            j = i + 1
-            if j >= len(temp_path):
-                j = 0
-            path_lenths.append(self.analyzer.shortest_path_length(graph, temp_path[i], temp_path[j]))
-            for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
-                path.append(node)
-            #remove last node because the last in the final case it adds the last and the last, so it adds twice causing an error in the pathgeneration
-            path.pop(-1)
-        print(path)
+        # Iterate thorugh all possible paths and choose the one closest to the input of the user
         
-        path_length = sum(path_lenths)
+        for temp_path in leaf_paths:
+            path = []
+            temp_path_lengths = []
+            # Loop through all shortest paths between the point and add them to 1 path (cyclus)
+            for i in range(0, len(temp_path) - 1):
+                j = i + 1
+                if j >= len(temp_path):
+                    j = 0
+                try:
+                    temp_path_lengths.append(self.analyzer.shortest_path_length(graph, temp_path[i], temp_path[j]))
+                    for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
+                        path.append(node)
+                    # remove last node because the last in the final casce it adds the last and the last _______________NOT GOOD??????____________________
+                    path.pop(-1)
+                    
+                except nx.exception.NetworkXNoPath:
+                    # No path error
+                    print(f"No path from {temp_path[i]} to {temp_path[j]}")
+                    continue
+
+            if path != []:
+                paths.append(path)
+                path_lengths.append(sum(temp_path_lengths) * 1000)        
+
+        path = []
+        path_length = 0
+        path_length_diff = {}
+        # find the path closest to the input of the user
+        for i in range(0, len(paths)):
+            path_length_diff[i] = abs(path_lengths[i] - max_length)
+        #print(path_length_diff)
+
+       
+        
+        # find the index of the path with the smallest difference
+        min_diff = min(path_length_diff.values())
+        min_diff_index = list(path_length_diff.keys())[list(path_length_diff.values()).index(min_diff)]
+        path = paths[min_diff_index]
+        path_length = path_lengths[min_diff_index]
+        print("path length (closest to input) meter: ", path_length)
+        # convert to km
+        path_length /= 1000
+        print("path length (closest to input) kilometer: ", path_length)
+
+        #_________________________________________________________
 
         elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
