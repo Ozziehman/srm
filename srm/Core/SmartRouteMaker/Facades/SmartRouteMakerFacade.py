@@ -178,7 +178,9 @@ class SmartRouteMakerFacade():
         # testing area: START
         path = []
         path_lenths = []
-        #This needs to iterate over all paths and look for the best match with the user input choices
+        #_________________________________________________________
+        #This needs to iterate over all paths and look for the best match with the user input choices!!
+        #_________________________________________________________
         temp_path = leaf_paths[0]
 
         # Loop through all shortest paths between the point and add them to 1 path (cyclus)
