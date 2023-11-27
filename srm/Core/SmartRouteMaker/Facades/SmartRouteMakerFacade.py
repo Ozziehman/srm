@@ -97,6 +97,10 @@ class SmartRouteMakerFacade():
         leafs = 8
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
         points_per_leaf = 12
+        #always put the index of the startpoint on the left side of the circle(leaf) This wil ALWAYS be where the center is for the flower incase of the first leaf
+        #start_point_index = leafs/2
+        # The amount the index of the start point increments for each leaf
+        #start_point_index_increment = leafs/points_per_leaf
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
@@ -104,7 +108,7 @@ class SmartRouteMakerFacade():
         variance = 1.2
         
         # Load the graph
-        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + .5)) #create a slightlky larger map than necessary for more headroom
+        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + .5)) #create a slightly larger map than necessary for more headroom
         
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
@@ -117,37 +121,41 @@ class SmartRouteMakerFacade():
 
         # create list of multiple leaf path to evaluate LATER
         leaf_paths = []
-        # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle
+        # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle (EXAMPLE)
         for flower_angle in flower_angles:
-            # start added is for adding the starting node to the leaf_nodes list
-            start_added = False
-            flower_direction = flower_angle
-            #print("Flower direction: ",flower_direction)
-            # Calculate how far to go in a direction according to the given length of the route
-            
 
-            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat
+            # Calculate the index of the start point on the circle, based on the direction of the circle
+            start_point_index = ((flower_angle * (180 / math.pi))/360) * points_per_leaf + (points_per_leaf/2)
+            if start_point_index >= points_per_leaf:
+                start_point_index = start_point_index - points_per_leaf
+            print(start_point_index)
+
+            flower_direction = flower_angle
+
+            #print("Flower direction: ",flower_direction)
+            
+            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
             difference_lon = math.cos(flower_direction) * radius * variance / 111000
             difference_lat = math.sin(flower_direction) * radius * variance / 111000
                   
             leaf_center_lon = float(graph.nodes[start_node]["x"]) + float(difference_lon)
             leaf_center_lat = float(graph.nodes[start_node]["y"]) + float(difference_lat)
 
-            leaf_nodes = []
-
             # Get the node closest to the center of the leaf
             leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
             print("(", graph.nodes[leaf_center_node]["x"], ",",  graph.nodes[leaf_center_node]["y"], ")")
             # generate leaf angles depending on the numbe of leafs to be generated
             leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
-
+            #create leaf nodes list for each leaf
+            leaf_nodes = []
             # Create a circle around the current leaf_center_node an dcreate points on this leaf to make a route
             for leaf_angle in leaf_angles:
+                
                 leaf_direction = leaf_angle
                 #print("Flower direction: ",flower_direction)
                 # Calculate how far to go in a direction according to the given length of the route
 
-                # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat
+                # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
                 difference_lon = math.cos(leaf_direction) * radius * variance / 111000
                 difference_lat = math.sin(leaf_direction) * radius * variance / 111000
                 
@@ -156,13 +164,19 @@ class SmartRouteMakerFacade():
 
                 leaf_node = self.graph.closest_node(graph, (leaf_node_lat, leaf_node_lon))
 
-                if start_added == False:
-                    leaf_nodes.append(start_node)
-                    start_added = True
+                # remove double nodes later on, but not right now to keep the start_index correct
+                leaf_nodes.append(leaf_node)
 
-                if leaf_node not in leaf_nodes:
-                    leaf_nodes.append(leaf_node)
-                leaf_paths.append(leaf_nodes) # will end up with 1 extra node, that is the starting node
+            leaf_nodes.insert(int(round(start_point_index)), start_node)
+            # transform list into right order so the start point is in the front
+            front_part = leaf_nodes[int(round(start_point_index)):]
+            back_part = leaf_nodes[:int(round(start_point_index))]
+            leaf_nodes = front_part + back_part
+            # take out the duplicates
+            leaf_nodes = list(dict.fromkeys(leaf_nodes))
+            # add the gathered leaf nodes to the leaf_paths list and repeat loop for next leaf   
+            leaf_paths.append(leaf_nodes) # will end up with 1 extra node, that is the starting node
+
             for i in leaf_nodes:
                 print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
             print("__________________________________________________________")
@@ -172,7 +186,8 @@ class SmartRouteMakerFacade():
         path = []
         path_lenths = []
         #This needs to iterate over all paths and look for the best match with the user input choices
-        temp_path = leaf_paths[6]
+        temp_path = leaf_paths[0]
+        print("temp_path: ", temp_path)
 
         # Loop through all shortest paths between the point and add them to 1 path (cyclus)
         for i in range(0, len(temp_path) - 1):
