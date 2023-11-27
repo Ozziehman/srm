@@ -171,13 +171,15 @@ class SmartRouteMakerFacade():
             leaf_nodes = front_part + back_part
             # take out the duplicates
             leaf_nodes = list(dict.fromkeys(leaf_nodes))
+            # add the start node to the end of the list to make a full circle
+            leaf_nodes.append(start_node)
             # add the gathered leaf nodes to the leaf_paths list and repeat loop for next leaf   
             leaf_paths.append(leaf_nodes) # will end up with 1 extra node, that is the starting node
 
             #test print
-            #for i in leaf_nodes:
-            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            #print("__________________________________________________________")
+            for i in leaf_nodes:
+                print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
+            print("__________________________________________________________")
 
 
         # Area for making the actual path and adding it into the paths list for evaluation
@@ -216,7 +218,7 @@ class SmartRouteMakerFacade():
         # find the path closest to the input of the user
         for i in range(0, len(paths)):
             path_length_diff[i] = abs(path_lengths[i] - max_length)
-        #print(path_length_diff)
+        print(path_length_diff)
 
        
         
