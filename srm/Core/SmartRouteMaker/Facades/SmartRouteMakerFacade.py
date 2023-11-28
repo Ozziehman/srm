@@ -94,15 +94,15 @@ class SmartRouteMakerFacade():
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
-        leafs = 64
+        leafs = 32
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 500
+        points_per_leaf = 5
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom, additive to variance
+        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom additive to vari
         
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
@@ -200,7 +200,7 @@ class SmartRouteMakerFacade():
                     temp_path_lengths.append(self.analyzer.shortest_path_length(graph, temp_path[i], temp_path[j]))
                     for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
                         path.append(node)
-                    # remove last node because the last in the final casce it adds the last and the last _______________NOT GOOD??????____________________
+                    # remove last node because the last in the final casce it adds the last and the last
                     path.pop(-1)
                     
                 except nx.exception.NetworkXNoPath:
