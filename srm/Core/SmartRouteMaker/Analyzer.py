@@ -3,6 +3,7 @@ import networkx as nx
 from typing import OrderedDict
 from networkx import MultiDiGraph
 import requests
+import srtm
 
 class Analyzer:
 
@@ -74,21 +75,15 @@ class Analyzer:
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
     def calculate_elevation_diff(self, graph, path) -> float:
-
+        #get elevation DATA
+        elevation_data = srtm.get_data()
         elevation_nodes = []
         #get elevation for each node from api
         for graphNode in path:
             node = graph.nodes[graphNode]
             nodeLat = node['y']
             nodeLon = node['x']
-            api_url = f"https://api.open-meteo.com/v1/elevation?latitude={nodeLat}&longitude={nodeLon}"
-
-            response = requests.get(api_url)
-
-            if response.status_code == 200:
-                elevation_nodes.append(response.json())
-            else:
-                print(f"Error making API call to {api_url}. Status code: {response.status_code}")
+            elevation_nodes.append(elevation_data.get_elevation(nodeLat, nodeLon))
         #for i in elevation_nodes:
         #    print(i)
         return elevation_nodes
