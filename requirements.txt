@@ -72,3 +72,4 @@ Werkzeug==2.2.2
 widgetsnbextension==4.0.3
 xyzservices==2022.9.0
 yapf==0.32.0
+srtm.py==0.3.7
