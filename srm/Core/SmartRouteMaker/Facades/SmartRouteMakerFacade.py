@@ -88,9 +88,37 @@ class SmartRouteMakerFacade():
     # Own algorithm here, flower idea
     def plan_circular_route_flower(self, start_coordinates, max_length: int, options: dict) -> dict:
 
-        """Generates a flower like structure on a given graph with circles
-        which centers are N NE NW S SE SW E W of the starting node. On each circle the algorithm
-        places 4 (or more, depending on future ideas) point which are used for making a route."""
+        """
+        Generates a flower-like route structure on a given graph, where each petal represents a circular path around the starting node.
+        The algorithm places points on each petal, forming a route that connects them. The number of petals, points per petal, and other parameters can be adjusted.
+
+        Parameters
+        ----------
+        - start_coordinates (tuple): The coordinates (latitude, longitude) of the starting point.
+        - max_length (int): The maximum desired length of the generated route.
+        - options (dict): Additional options for analysis and visualization.
+
+        Returns
+        -------
+        Output with all relavtive information for further analysis and visualization.
+
+        Functionality
+        -------------
+        - Generates a circular pattern with a configurable number of leafs around the starting node.
+        - Calculates the route by connecting points on each leaf.
+        - Evaluates multiple paths and selects the one closest to the specified user input.
+        - Performs path analysis, surface distribution analysis, and optionally visualizes the route.
+        - Returns a comprehensive output dictionary with relevant information for further analysis and visualization.
+
+        Note: This function is designed for route planning on a graph, considering geographical coordinates and various path attributes.
+
+        Example Usage
+        -------------
+        start_coords = (latitude, longitude)
+        max_route_length = 5000  # in meters
+        analysis_options = {"analyze": True, "surface_dist": True}
+        route_info = plan_circular_route_flower(start_coords, max_route_length, analysis_options)
+        """
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
