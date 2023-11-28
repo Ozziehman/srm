@@ -94,18 +94,18 @@ class SmartRouteMakerFacade():
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
-        leafs = 24
+        leafs = 64
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 8
+        points_per_leaf = 6
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_radius = 3 #used for loading in a larger graph than necessary for more headroom
+        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom, additive to variance
         
         # Load the graph
-        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_radius)) #create a slightly larger map than necessary for more headroom
+        graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
         
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
@@ -226,7 +226,10 @@ class SmartRouteMakerFacade():
         min_diff = min(path_length_diff.values())
         min_diff_index = list(path_length_diff.keys())[list(path_length_diff.values()).index(min_diff)]
         path = paths[min_diff_index]
+        #add start node to the end to make full circle
+        path.append(start_node)
         path_length = path_lengths[min_diff_index]
+        print(path)
         print("path length (closest to input) meter: ", path_length)
         # convert to km
         path_length /= 1000
