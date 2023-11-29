@@ -252,7 +252,7 @@ class SmartRouteMakerFacade():
        
         #get the 10 path closest to the input length and save them as the index of the path in the paths list
         min_length_diff_routes_indeces = []
-        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:5] # minimum 10
+        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/5)] # minimum 10
         min_length_diff_routes_indeces.extend(sorted_indices)
         print(min_length_diff_routes_indeces)
         print("__________________________________________________________")
