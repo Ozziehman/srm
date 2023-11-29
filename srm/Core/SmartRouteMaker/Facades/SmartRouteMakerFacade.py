@@ -130,7 +130,7 @@ class SmartRouteMakerFacade():
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom additive to vari
+        additonal_variance = 0 #used for loading in a larger graph than necessary for more headroom additive to vari
         
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
@@ -196,6 +196,7 @@ class SmartRouteMakerFacade():
             # transform list into right order so the start point is in the front
             front_part = leaf_nodes[int(round(start_point_index)):]
             back_part = leaf_nodes[:int(round(start_point_index))]
+            #problem..... very rarely the start node is not at the start of the list??
             leaf_nodes = front_part + back_part
             # take out the duplicates
             leaf_nodes = list(dict.fromkeys(leaf_nodes))
@@ -247,25 +248,47 @@ class SmartRouteMakerFacade():
         for i in range(0, len(paths)):
             path_length_diff[i] = abs(path_lengths[i] - max_length)
         print(path_length_diff)
-
+        print("__________________________________________________________")
        
-        
-        # find the index of the path with the smallest difference
-        min_diff = min(path_length_diff.values())
-        min_diff_index = list(path_length_diff.keys())[list(path_length_diff.values()).index(min_diff)]
-        path = paths[min_diff_index]
+        #get the 10 path closest to the input length and save them as the index of the path in the paths list
+        min_length_diff_routes_indeces = []
+        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:10] # minimum 10
+        min_length_diff_routes_indeces.extend(sorted_indices)
+        print(min_length_diff_routes_indeces)
+        print("__________________________________________________________")
+
+        height_diffs = {}
+        #testing var____
+        elevation_diff_input = 100
+        #_______________
+
+        #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
+        for path_index in min_length_diff_routes_indeces:
+            temp_path = paths[path_index]
+            path_length = path_lengths[path_index]
+            print("path length (closest to input) meter: ", path_length)
+            # convert to km
+            path_length /= 1000
+            print("path length (closest to input) kilometer: ", path_length)
+            elevation_diff = self.analyzer.calculate_elevation_diff(graph, temp_path)
+            print("elevation difference: ", elevation_diff)
+            height_diffs[path_index] = abs(elevation_diff - elevation_diff_input)
+            print("__________________________________________________________")
+        print(height_diffs)
+        # get the path with the lowest elevation difference from the "amount" paths closest to the length input
+        best_path_index = min(height_diffs, key=height_diffs.get)
+        print("Best path: ", best_path_index)
+        # set the path as the best path and display
+        path = paths[best_path_index]
         #add start node to the end to make full circle
         path.append(start_node)
-        path_length = path_lengths[min_diff_index]
+        path_length = path_lengths[best_path_index]
+        # calculate the total elevation of the path
+        elevation_diff = height_diffs[best_path_index]
         print(path)
         print("path length (closest to input) meter: ", path_length)
-        # convert to km
-        path_length /= 1000
-        print("path length (closest to input) kilometer: ", path_length)
 
         #_________________________________________________________
-
-        elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
 
             # Visualize the route
         if "analyze" in options and options['analyze']:
@@ -297,7 +320,7 @@ class SmartRouteMakerFacade():
             "surface_dist_visualisation": surface_dist_visualisation,
             "surface_dist_legenda": surface_dist_legenda,
             "simple_polylines": simple_polylines,
-            "elevation_nodes": elevation_nodes
+            "elevation_diff": elevation_diff
         }
 
         return output

@@ -84,9 +84,13 @@ class Analyzer:
             nodeLat = node['y']
             nodeLon = node['x']
             elevation_nodes.append(elevation_data.get_elevation(nodeLat, nodeLon))
-        #for i in elevation_nodes:
-        #    print(i)
-        return elevation_nodes
+        #calculate the elevation
+        elevation_diff = 0
+        for i in range(1, len(elevation_nodes)):
+            diff = elevation_nodes[i] - elevation_nodes[i - 1]
+            if diff > 0:
+                elevation_diff += diff
+        return elevation_diff
     
     def remove_appendage_nodes(self, lst):
         result = []

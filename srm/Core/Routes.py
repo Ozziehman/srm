@@ -50,6 +50,6 @@ def handle_circular_routing():
         surfaceDistLegenda=route['surface_dist_legenda'],
         surfaceDistVisualisation=route['surface_dist_visualisation'],
         path_length=route['path_length'],
-        elevation_nodes=route['elevation_nodes'],
+        elevation_diff=route['elevation_diff'],
         routeVisualisation=route['simple_polylines']
     )
