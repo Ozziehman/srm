@@ -75,6 +75,28 @@ class Analyzer:
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
     def calculate_elevation_diff(self, graph, path) -> float:
+        """
+        Calculates the total positive elevation difference along a specified path within a graph.
+
+        Parameters
+        ----------
+        - self: Instance of the class.
+        - graph: Graph containing nodes and edges.
+        - path: Path within the graph for elevation difference calculation.
+
+        Returns
+        -------
+        - float: Total positive elevation difference along the specified path.
+
+        This function utilizes elevation data, possibly from the SRTM API, to retrieve elevation
+        values for nodes in the given path. It then calculates the positive elevation differences
+        between adjacent nodes and returns the total sum. Error handling is implemented for cases
+        where elevation data retrieval or difference calculation encounters issues.
+
+        Example
+        -------
+        elevation_difference = calculate_elevation_diff(my_graph_instance, my_path)
+        """
         # get elevation DATA
         elevation_data = srtm.get_data()
         elevation_nodes = []
@@ -109,6 +131,27 @@ class Analyzer:
 
     
     def min_length_routes_indeces(self, paths, path_lengths, max_length, leafs) -> list:
+        """
+        Identifies and returns the indices of the routes with lengths closest to a specified maximum length.
+
+        Parameters
+        ----------
+        - self: Instance of the class.
+        - paths: List of routes represented as nodes or edges.
+        - path_lengths: List of corresponding lengths for each route.
+        - max_length: Inputted length of the route.
+        - leafs: Number of total generated routes.
+
+        Returns
+        -------
+        - list: Indices of the routes with lengths closest to the specified maximum length this is contextual to the paths list.
+
+        This function returns the leafs/5 routes with lengths closest to the specified maximum length.
+
+        Example
+        -------
+        route_indices = min_length_routes_indeces(my_paths, my_lengths, max_allowed_length, leafs = 15)
+        """
         path_length_diff = {}
         # Find the path closest to the input of the user
         for i in range(len(paths)):
