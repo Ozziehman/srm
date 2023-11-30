@@ -150,11 +150,9 @@ class SmartRouteMakerFacade():
         # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle (EXAMPLE)
         for flower_angle in flower_angles:
 
-            # Calculate the index of the start point on the circle, based on the direction of the circle
-            start_point_index = ((flower_angle * (180 / math.pi))/360) * points_per_leaf + (points_per_leaf/2)
-            if start_point_index >= points_per_leaf:
-                start_point_index = start_point_index - points_per_leaf
-            #test print
+            #calculate where to put the start point in the circle
+            start_point_index = self.planner.calculate_start_point_index(flower_angle, points_per_leaf)
+            
             #print("Unrounded start_point index: ", start_point_index)
 
             flower_direction = flower_angle
@@ -192,18 +190,9 @@ class SmartRouteMakerFacade():
                 # remove double nodes later on, but not right now to keep the start_index correct
                 leaf_nodes.append(leaf_node)
 
-            leaf_nodes.insert(int(round(start_point_index)), start_node)
-            # transform list into right order so the start point is in the front
-            front_part = leaf_nodes[int(round(start_point_index)):]
-            back_part = leaf_nodes[:int(round(start_point_index))]
-            #problem..... very rarely the start node is not at the start of the list??
-            leaf_nodes = front_part + back_part
-            # take out the duplicates
-            leaf_nodes = list(dict.fromkeys(leaf_nodes))
-            # add the start node to the end of the list to make a full circle
-            leaf_nodes.append(start_node)
-            # add the gathered leaf nodes to the leaf_paths list and repeat loop for next leaf   
-            leaf_paths.append(leaf_nodes) # will end up with 1 extra node, that is the starting node
+            # Get the list in the correct order witht he correct nodes
+            leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
+            leaf_paths.append(leaf_nodes)
 
             #test print
             for i in leaf_nodes:
@@ -241,21 +230,7 @@ class SmartRouteMakerFacade():
                 paths.append(path)
                 path_lengths.append(sum(temp_path_lengths) * 1000)        
 
-        path = []
-        path_length = 0
-        path_length_diff = {}
-        # find the path closest to the input of the user
-        for i in range(0, len(paths)):
-            path_length_diff[i] = abs(path_lengths[i] - max_length)
-        print(path_length_diff)
-        print("__________________________________________________________")
-       
-        #get the 10 path closest to the input length and save them as the index of the path in the paths list
-        min_length_diff_routes_indeces = []
-        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/5)] # minimum 10
-        min_length_diff_routes_indeces.extend(sorted_indices)
-        print(min_length_diff_routes_indeces)
-        print("__________________________________________________________")
+        min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
 
         height_diffs = {}
         #testing var____
@@ -266,27 +241,42 @@ class SmartRouteMakerFacade():
         for path_index in min_length_diff_routes_indeces:
             temp_path = paths[path_index]
             path_length = path_lengths[path_index]
+
             print("path length (closest to input) meter: ", path_length)
+
             # convert to km
             path_length /= 1000
             print("path length (closest to input) kilometer: ", path_length)
+
+            # Get the sum of all upwards elevation changes in the all paths
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, temp_path)
             print("elevation difference: ", elevation_diff)
-            height_diffs[path_index] = abs(elevation_diff - elevation_diff_input)
+
+            # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index 
+            # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
+            height_diffs[path_index] = abs(elevation_diff_input - elevation_diff)
             print("__________________________________________________________")
         print(height_diffs)
+
         # get the path with the lowest elevation difference from the "amount" paths closest to the length input
         best_path_index = min(height_diffs, key=height_diffs.get)
         print("Best path: ", best_path_index)
+
         # set the path as the best path and display
         path = paths[best_path_index]
+
         #add start node to the end to make full circle
         path.append(start_node)
+
+        # Get the path length of the best path
         path_length = path_lengths[best_path_index]
+        elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+
         # calculate the total elevation of the path
-        elevation_diff = height_diffs[best_path_index] + elevation_diff_input
+        
         print(path)
         print("path length (closest to input) meter: ", path_length)
+        print("elevation difference: ", elevation_diff)
 
         #_________________________________________________________
 

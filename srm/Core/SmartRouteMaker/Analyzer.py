@@ -92,18 +92,24 @@ class Analyzer:
                 elevation_diff += diff
         return elevation_diff
     
-    def remove_appendage_nodes(self, lst):
-        result = []
-        seen = set()
-        for item in lst:
-            if item not in seen:
-                seen.add(item)
-                result.append(item)
-            else:
-                # Remove the nodes in between the two duplicate nodes id's
-                result = result[:result.index(item)] + [item]
-                seen = {item}
-        return result
+    def min_length_routes_indeces(self, paths, path_lengths, max_length, leafs) -> list:
+        path_length_diff = {}
+        # Find the path closest to the input of the user
+        for i in range(len(paths)):
+            path_length_diff[i] = abs(path_lengths[i] - max_length)
+
+        print(path_length_diff)
+        print("__________________________________________________________")
+
+        # Get the 10 paths closest to the input length and save their indices
+        min_length_diff_routes_indices = []
+        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/5)]  # Minimum 10
+        min_length_diff_routes_indices.extend(sorted_indices)
+
+        print(min_length_diff_routes_indices)
+        print("__________________________________________________________")
+
+        return min_length_diff_routes_indices
     
 
     

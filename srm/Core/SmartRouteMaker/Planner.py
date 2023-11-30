@@ -1,6 +1,7 @@
 import osmnx as ox
 from typing import Tuple, List
 from networkx import MultiDiGraph
+import math
 
 class Planner:
 
@@ -17,4 +18,13 @@ class Planner:
         """        
 
         return ox.shortest_path(graph, start_node, end_node)
+    
+    def calculate_start_point_index(self, flower_angle, points_per_leaf):
+        # Calculate the index of the start point on the circle, based on the direction of the circle
+        start_point_index = ((flower_angle * (180 / math.pi)) / 360) * points_per_leaf + (points_per_leaf / 2)
+
+        if start_point_index >= points_per_leaf:
+            start_point_index = start_point_index - points_per_leaf
+
+        return start_point_index
     

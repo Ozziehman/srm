@@ -63,4 +63,22 @@ class Graph:
         return ox.nearest_nodes(graph, coordinates[1], coordinates[0])     
         # return ox.nearest_nodes(graph, longtitude(x), latitude(y))   
 
+    def insert_start_node_and_rearrange(self, leaf_nodes, start_node, start_point_index):
+            leaf_nodes.insert(int(round(start_point_index)), start_node)
+
+            # transform list into right order so the start point is in the front
+            front_part = leaf_nodes[int(round(start_point_index)):]
+            back_part = leaf_nodes[:int(round(start_point_index))]
+
+            # put the list back together
+            leaf_nodes = front_part + back_part
+
+            # take out the duplicates
+            leaf_nodes = list(dict.fromkeys(leaf_nodes))
+
+            # add the start node to the end of the list to make a full circle
+            leaf_nodes.append(start_node)
+
+            return leaf_nodes
+
 
