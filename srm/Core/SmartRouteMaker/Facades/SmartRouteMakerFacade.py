@@ -124,13 +124,13 @@ class SmartRouteMakerFacade():
         # Number of circles(leafs) drawn around start as flower
         leafs = 32
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 5
+        points_per_leaf = 50
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_variance = 0 #used for loading in a larger graph than necessary for more headroom additive to vari
+        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom additive to vari
         
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
@@ -196,9 +196,9 @@ class SmartRouteMakerFacade():
             leaf_paths.append(leaf_nodes)
 
             #test print
-            #for i in leaf_nodes:
-            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            #print("__________________________________________________________")
+            for i in leaf_nodes:
+                print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
+            print("__________________________________________________________")
 
 
         # Area for making the actual path and adding it into the paths list for evaluation
