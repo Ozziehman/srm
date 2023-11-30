@@ -86,7 +86,7 @@ class SmartRouteMakerFacade():
 
 
     # Own algorithm here, flower idea
-    def plan_circular_route_flower(self, start_coordinates, max_length: int, options: dict) -> dict:
+    def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, options: dict) -> dict:
 
         """
         Generates a flower-like route structure on a given graph, where each petal represents a circular path around the starting node.
@@ -139,6 +139,7 @@ class SmartRouteMakerFacade():
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
         print("Start: ", "(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
         print("Inputted route length: ", max_length)
+        print("Inputted elevation difference: ", elevation_diff_input)
         print("...........................................")
        
 
@@ -195,9 +196,9 @@ class SmartRouteMakerFacade():
             leaf_paths.append(leaf_nodes)
 
             #test print
-            for i in leaf_nodes:
-                print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            print("__________________________________________________________")
+            #for i in leaf_nodes:
+            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
+            #print("__________________________________________________________")
 
 
         # Area for making the actual path and adding it into the paths list for evaluation
@@ -233,9 +234,6 @@ class SmartRouteMakerFacade():
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
 
         height_diffs = {}
-        #testing var____
-        elevation_diff_input = 100
-        #_______________
 
         #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
         for path_index in min_length_diff_routes_indeces:

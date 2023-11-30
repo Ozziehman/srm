@@ -39,11 +39,10 @@ def handle_circular_routing():
     #pass the form data to the facade
     start = srmf.normalize_coordinates(request.form['start_point'])
     max_length = int(request.form['max_length'])
-
-    #total_elevation_diff = srmf.apply_elevation_param(request.form['total_elevation_diff'])
+    total_elevation_diff = int(request.form['total_elevation_diff'])
     
 
-    route = srmf.plan_circular_route_flower(start, max_length, options={"analyze": True, "surface_dist": True})
+    route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, options={"analyze": True, "surface_dist": True})
 
     return render_template('result.html', 
         surfaces=route['surface_dist'],

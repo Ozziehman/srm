@@ -75,22 +75,38 @@ class Analyzer:
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
     def calculate_elevation_diff(self, graph, path) -> float:
-        #get elevation DATA
+        # get elevation DATA
         elevation_data = srtm.get_data()
         elevation_nodes = []
-        #get elevation for each node from api
+
+        # get elevation for each node from api
         for graphNode in path:
             node = graph.nodes[graphNode]
             nodeLat = node['y']
             nodeLon = node['x']
-            elevation_nodes.append(elevation_data.get_elevation(nodeLat, nodeLon))
-        #calculate the elevation
+
+            try:
+                elevation = elevation_data.get_elevation(nodeLat, nodeLon)
+                elevation_nodes.append(elevation)
+            except Exception as e:
+                # Handle the case where getting elevation fails
+                print(f"Error getting elevation for node {graphNode}: {e}")
+                # You might want to log the error or take appropriate action.
+
+        # calculate the elevation difference
         elevation_diff = 0
         for i in range(1, len(elevation_nodes)):
-            diff = elevation_nodes[i] - elevation_nodes[i - 1]
-            if diff > 0:
-                elevation_diff += diff
+            try:
+                diff = elevation_nodes[i] - elevation_nodes[i - 1]
+                if diff > 0:
+                    elevation_diff += diff
+            except TypeError as e:
+                # Handle the case where the subtraction resulted in a TypeError
+                print(f"Error in elevation difference calculation: {e}")
+                # You might want to log the error or take appropriate action.
+
         return elevation_diff
+
     
     def min_length_routes_indeces(self, paths, path_lengths, max_length, leafs) -> list:
         path_length_diff = {}
