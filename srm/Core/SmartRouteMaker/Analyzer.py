@@ -111,9 +111,8 @@ class Analyzer:
                 elevation = elevation_data.get_elevation(nodeLat, nodeLon)
                 elevation_nodes.append(elevation)
             except Exception as e:
-                # Handle the case where getting elevation fails
+                # Handle case where getting elevation gioes wrong
                 print(f"Error getting elevation for node {graphNode}: {e}")
-                # You might want to log the error or take appropriate action.
 
         # calculate the elevation difference
         elevation_diff = 0
@@ -123,9 +122,8 @@ class Analyzer:
                 if diff > 0:
                     elevation_diff += diff
             except TypeError as e:
-                # Handle the case where the subtraction resulted in a TypeError
+                # Handle error 
                 print(f"Error in elevation difference calculation: {e}")
-                # You might want to log the error or take appropriate action.
 
         return elevation_diff
 

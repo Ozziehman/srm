@@ -123,15 +123,15 @@ class SmartRouteMakerFacade():
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
-        leafs = 100
+        leafs = 64
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 5
+        points_per_leaf = 6
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_variance = 1 #used for loading in a larger graph than necessary for more headroom additive to vari
+        additonal_variance = 1.2 #used for loading in a larger graph than necessary for more headroom additive to variance ALWAYS > 1
         
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
@@ -273,6 +273,8 @@ class SmartRouteMakerFacade():
         # Get the path length of the best path
         path_length = path_lengths[best_path_index]
         elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+        # Visualize the elevation profile of the path with matplotlib
+        self.visualizer.visualize_elevations(graph, path)
 
         # calculate the total elevation of the path
         

@@ -50,5 +50,9 @@ def handle_circular_routing():
         surfaceDistVisualisation=route['surface_dist_visualisation'],
         path_length=route['path_length'],
         elevation_diff=route['elevation_diff'],
-        routeVisualisation=route['simple_polylines']
+        routeVisualisation=route['simple_polylines'],
+        image_info={
+            'leaf_points': "/srm/Images/leaf_points.png",
+            'elevation': "/srm/Images/elevation.png"
+        }
     )

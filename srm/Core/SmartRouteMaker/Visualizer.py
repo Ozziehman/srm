@@ -1,9 +1,11 @@
 import json
+import os
 import osmnx as ox
 import networkx as nx
 from typing import Dict, List, OrderedDict
 from networkx import MultiDiGraph
 from matplotlib import pyplot as plt
+import srtm
 
 class Visualizer:
 
@@ -116,8 +118,20 @@ class Visualizer:
         return visualisationSettings['surfaces'][surface]
     
     def visualize_leaf_points(self, leaf_paths: list, graph: MultiDiGraph) -> None:
-        """Visualize the leaf points.
+        """Visualize the leaf points and optionally save the plot as an image.
+
+        Parameters
+        ----------
+        - leaf_paths (list): List of paths representing leaf nodes.
+        - graph (MultiDiGraph): The graph containing node coordinates.
+        - save_path (str, optional): Path to save the plot image. If None, the plot is not saved.
+
+        Returns
+        -------
+        - None
         """
+        save_path = "srm/Images/leaf_points.png"
+        
         fig, ax = plt.subplots()
 
         for leaf_nodes in leaf_paths:
@@ -132,5 +146,33 @@ class Visualizer:
         ax.set_ylabel('Latitude')
         ax.set_title('All Points')
 
-        # Show the plot
-        plt.show()
+        if save_path:
+            plt.savefig(save_path, format="png")
+
+    def visualize_elevations(self, graph, path):
+        """Visualize the elevations of a path and save the plot as an image."""
+        elevation_data = srtm.get_data()
+        elevation_nodes = []
+
+        for graphNode in path:
+            node = graph.nodes[graphNode]
+            nodeLat = node['y']
+            nodeLon = node['x']
+
+            try:
+                elevation = elevation_data.get_elevation(nodeLat, nodeLon)
+                elevation_nodes.append(elevation)
+            except Exception as e:
+                # Handle the case where getting elevation gioes wrong
+                print(f"Error getting elevation for node {graphNode}: {e}")
+
+        # Visualize elevation wit matplotlib
+        save_path = "srm/Images/elevation.png"
+        plt.plot(elevation_nodes, marker='.', linestyle='-', color='b')
+        plt.title('Elevation Profile')
+        plt.xlabel('Node Index')
+        plt.ylabel('Elevation (meters)')
+        plt.grid(True)
+        if save_path:
+            plt.savefig(save_path, format="png")
+
