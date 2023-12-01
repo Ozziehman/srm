@@ -3,6 +3,7 @@ import osmnx as ox
 import networkx as nx
 from typing import Dict, List, OrderedDict
 from networkx import MultiDiGraph
+from matplotlib import pyplot as plt
 
 class Visualizer:
 
@@ -113,3 +114,23 @@ class Visualizer:
             visualisationSettings = json.load(settings)
 
         return visualisationSettings['surfaces'][surface]
+    
+    def visualize_leaf_points(self, leaf_paths: list, graph: MultiDiGraph) -> None:
+        """Visualize the leaf points.
+        """
+        fig, ax = plt.subplots()
+
+        for leaf_nodes in leaf_paths:
+            # Extract x and y coordinates from leaf nodes
+            leaf_x = [graph.nodes[node]["x"] for node in leaf_nodes]
+            leaf_y = [graph.nodes[node]["y"] for node in leaf_nodes]
+
+            # Plot the leaf path
+            ax.plot(leaf_x, leaf_y, marker='o', linestyle=':')
+        # Set labels and title
+        ax.set_xlabel('Longitude')
+        ax.set_ylabel('Latitude')
+        ax.set_title('All Points')
+
+        # Show the plot
+        plt.show()

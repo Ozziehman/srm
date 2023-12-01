@@ -6,6 +6,7 @@ import networkx as nx
 import requests
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 import random
 
 from ...SmartRouteMaker import Analyzer
@@ -122,9 +123,9 @@ class SmartRouteMakerFacade():
         print("flower route")
         
         # Number of circles(leafs) drawn around start as flower
-        leafs = 32
+        leafs = 100
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 50
+        points_per_leaf = 5
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
@@ -194,12 +195,15 @@ class SmartRouteMakerFacade():
             # Get the list in the correct order witht he correct nodes
             leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
             leaf_paths.append(leaf_nodes)
-
+            
+            
             #test print
             for i in leaf_nodes:
                 print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
             print("__________________________________________________________")
-
+         
+        # Visualize the leaf points
+        self.visualizer.visualize_leaf_points(leaf_paths, graph)
 
         # Area for making the actual path and adding it into the paths list for evaluation
         paths = []
