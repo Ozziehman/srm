@@ -240,6 +240,7 @@ class SmartRouteMakerFacade():
         height_diffs = {}
 
         #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
+        #from now on look at only close mathces on length of the route to the user input
         for path_index in min_length_diff_routes_indeces:
             temp_path = paths[path_index]
             path_length = path_lengths[path_index]
