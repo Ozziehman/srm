@@ -169,6 +169,7 @@ class Analyzer:
         return min_length_diff_routes_indices
     
     def get_height_diffs(self, graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) -> dict:
+        """Gets the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index"""
         height_diffs = {}
 
         #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
@@ -187,7 +188,6 @@ class Analyzer:
             # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
             height_diffs[path_index] = abs(elevation_diff_input - elevation_diff)
             print("__________________________________________________________")
-        print(height_diffs)
         return height_diffs
 
     

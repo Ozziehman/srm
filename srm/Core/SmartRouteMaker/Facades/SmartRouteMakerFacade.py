@@ -138,10 +138,10 @@ class SmartRouteMakerFacade():
         
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
-        print("Start: ", "(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
-        print("Inputted route length: ", max_length)
-        print("Inputted elevation difference: ", elevation_diff_input)
-        print("...........................................")
+        #print("Start: ", "(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
+        #print("Inputted route length: ", max_length)
+        #print("Inputted elevation difference: ", elevation_diff_input)
+        #print("...........................................")
        
 
         # Generate array of 360 equal sized angles, basically a circle, duhh
@@ -198,9 +198,9 @@ class SmartRouteMakerFacade():
             
             
             #test print
-            for i in leaf_nodes:
-                print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            print("__________________________________________________________")
+            #for i in leaf_nodes:
+            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
+            #print("__________________________________________________________")
          
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
@@ -260,7 +260,7 @@ class SmartRouteMakerFacade():
         self.visualizer.visualize_elevations(graph, path)
 
         
-        print(path)
+        #print(path)
         print("path length (closest to input) meter: ", path_length)
         print("elevation difference: ", elevation_diff)
 
