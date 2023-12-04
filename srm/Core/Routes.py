@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request
+import os
+from flask import Blueprint, render_template, request, url_for
 from .SmartRouteMaker.Facades import SmartRouteMakerFacade as srm
 
 core = Blueprint('core', __name__,
@@ -32,6 +33,8 @@ def handle_routing():
         routeVisualisation=route['simple_polylines']
     )
 
+
+
 @core.route('/handle_circular_routing', methods=['POST'])
 def handle_circular_routing():
     srmf = srm.SmartRouteMakerFacade()
@@ -43,6 +46,8 @@ def handle_circular_routing():
     
 
     route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, options={"analyze": True, "surface_dist": True})
+    
+    
 
     return render_template('result.html', 
         surfaces=route['surface_dist'],
@@ -50,9 +55,5 @@ def handle_circular_routing():
         surfaceDistVisualisation=route['surface_dist_visualisation'],
         path_length=route['path_length'],
         elevation_diff=route['elevation_diff'],
-        routeVisualisation=route['simple_polylines'],
-        image_info={
-            'leaf_points': "/srm/Images/leaf_points.png",
-            'elevation': "/srm/Images/elevation.png"
-        }
+        routeVisualisation=route['simple_polylines']
     )

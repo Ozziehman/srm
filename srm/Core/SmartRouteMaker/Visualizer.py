@@ -130,7 +130,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Core/Static/Images/leaf_points.png"
+        save_path = "srm/Core/Static/Image/leaf_points.png"
         
         fig, ax = plt.subplots()
 
@@ -162,7 +162,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Core/Static/Images/best_path_points.png"
+        save_path = "srm/Core/Static/Image/best_path_points.png"
         
         fig, ax = plt.subplots()
 
@@ -175,7 +175,7 @@ class Visualizer:
         # Set labels and title
         ax.set_xlabel('Longitude')
         ax.set_ylabel('Latitude')
-        ax.set_title('All Points')
+        ax.set_title('Best path')
 
         if save_path:
             plt.savefig(save_path, format="png")
@@ -184,7 +184,7 @@ class Visualizer:
         """Visualize the elevations of a path and save the plot as an image."""
         elevation_data = srtm.get_data()
         elevation_nodes = []
-
+        plt.clf()
         for graphNode in path:
             node = graph.nodes[graphNode]
             nodeLat = node['y']
@@ -198,7 +198,7 @@ class Visualizer:
                 print(f"Error getting elevation for node {graphNode}: {e}")
 
         # Visualize elevation wit matplotlib
-        save_path = "srm/Core/Static/Images/elevation.png"
+        save_path = "srm/Core/Static/Image/elevation.png"
         plt.plot(elevation_nodes, marker='.', linestyle='-', color='b')
         plt.title('Elevation Profile')
         plt.xlabel('Node Index')

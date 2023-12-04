@@ -232,6 +232,7 @@ class SmartRouteMakerFacade():
                     continue
 
             if path != []:
+                #TODO: take out duplicate nodes between duplicate nodes maybe???
                 paths.append(path)
                 path_lengths.append(sum(temp_path_lengths) * 1000)        
 
@@ -253,6 +254,7 @@ class SmartRouteMakerFacade():
 
         # Get the path length of the best path
         path_length = path_lengths[best_path_index]
+        
         elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
         # Visualize the elevation profile of the path with matplotlib
         self.visualizer.visualize_elevations(graph, path)
