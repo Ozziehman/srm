@@ -261,7 +261,7 @@ class SmartRouteMakerFacade():
 
         
         #print(path)
-        print("path length (closest to input) meter: ", path_length)
+        print("path length (closest to input) meter: ", round(path_length))
         print("elevation difference: ", elevation_diff)
 
         #_________________________________________________________
