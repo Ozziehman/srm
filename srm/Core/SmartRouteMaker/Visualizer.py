@@ -130,7 +130,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Images/leaf_points.png"
+        save_path = "srm/Core/Static/Images/leaf_points.png"
         
         fig, ax = plt.subplots()
 
@@ -162,7 +162,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Images/best_path_points.png"
+        save_path = "srm/Core/Static/Images/best_path_points.png"
         
         fig, ax = plt.subplots()
 
@@ -198,7 +198,7 @@ class Visualizer:
                 print(f"Error getting elevation for node {graphNode}: {e}")
 
         # Visualize elevation wit matplotlib
-        save_path = "srm/Images/elevation.png"
+        save_path = "srm/Core/Static/Images/elevation.png"
         plt.plot(elevation_nodes, marker='.', linestyle='-', color='b')
         plt.title('Elevation Profile')
         plt.xlabel('Node Index')
