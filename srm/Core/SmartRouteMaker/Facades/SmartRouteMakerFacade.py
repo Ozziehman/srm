@@ -237,30 +237,8 @@ class SmartRouteMakerFacade():
 
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
 
-        height_diffs = {}
-
-        #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
-        #from now on look at only close mathces on length of the route to the user input
-        for path_index in min_length_diff_routes_indeces:
-            temp_path = paths[path_index]
-            path_length = path_lengths[path_index]
-
-            print("path length (closest to input) meter: ", path_length)
-
-            # convert to km
-            path_length /= 1000
-            print("path length (closest to input) kilometer: ", path_length)
-
-            # Get the sum of all upwards elevation changes in the all paths
-            elevation_diff = self.analyzer.calculate_elevation_diff(graph, temp_path)
-            print("elevation difference: ", elevation_diff)
-
-            # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index 
-            # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
-            height_diffs[path_index] = abs(elevation_diff_input - elevation_diff)
-            print("__________________________________________________________")
-        print(height_diffs)
-
+        height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
+        
         # get the path with the lowest elevation difference from the "amount" paths closest to the length input
         best_path_index = min(height_diffs, key=height_diffs.get)
         print("Best path: ", best_path_index)
