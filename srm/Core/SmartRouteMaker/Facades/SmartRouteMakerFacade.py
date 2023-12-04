@@ -249,13 +249,14 @@ class SmartRouteMakerFacade():
         #add start node to the end to make full circle
         path.append(start_node)
 
+        self.visualizer.visualize_best_path(path, graph)
+
         # Get the path length of the best path
         path_length = path_lengths[best_path_index]
         elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
         # Visualize the elevation profile of the path with matplotlib
         self.visualizer.visualize_elevations(graph, path)
 
-        # calculate the total elevation of the path
         
         print(path)
         print("path length (closest to input) meter: ", path_length)

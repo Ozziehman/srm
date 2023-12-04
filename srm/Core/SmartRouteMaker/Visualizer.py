@@ -149,6 +149,37 @@ class Visualizer:
         if save_path:
             plt.savefig(save_path, format="png")
 
+    def visualize_best_path(self, path: list, graph: MultiDiGraph) -> None:
+        """Visualize the best path.
+
+        Parameters
+        ----------
+        - path (list): List of paths representing leaf nodes.
+        - graph (MultiDiGraph): The graph containing node coordinates.
+        - save_path (str, optional): Path to save the plot image. If None, the plot is not saved.
+
+        Returns
+        -------
+        - None
+        """
+        save_path = "srm/Images/best_path_points.png"
+        
+        fig, ax = plt.subplots()
+
+        # Extract x and y coordinates from nodes
+        leaf_x = [graph.nodes[node]["x"] for node in path]
+        leaf_y = [graph.nodes[node]["y"] for node in path]
+
+        # Plot the leaf path
+        ax.plot(leaf_x, leaf_y, marker='o', linestyle=':')
+        # Set labels and title
+        ax.set_xlabel('Longitude')
+        ax.set_ylabel('Latitude')
+        ax.set_title('All Points')
+
+        if save_path:
+            plt.savefig(save_path, format="png")
+
     def visualize_elevations(self, graph, path):
         """Visualize the elevations of a path and save the plot as an image."""
         elevation_data = srtm.get_data()
