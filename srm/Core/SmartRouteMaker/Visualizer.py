@@ -120,7 +120,7 @@ class Visualizer:
     def visualize_leaf_points(self, leaf_paths: list, graph: MultiDiGraph) -> None:
         """Visualize the leaf points and optionally save the plot as an image.
 
-        Parameters
+        Args
         ----------
         - leaf_paths (list): List of paths representing leaf nodes.
         - graph (MultiDiGraph): The graph containing node coordinates.
@@ -152,7 +152,7 @@ class Visualizer:
     def visualize_best_path(self, path: list, graph: MultiDiGraph) -> None:
         """Visualize the best path.
 
-        Parameters
+        Args
         ----------
         - path (list): List of paths representing leaf nodes.
         - graph (MultiDiGraph): The graph containing node coordinates.

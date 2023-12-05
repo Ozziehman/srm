@@ -4,8 +4,12 @@ from typing import OrderedDict
 from networkx import MultiDiGraph
 import requests
 import srtm
+from srm.Core.SmartRouteMaker import Planner
 
 class Analyzer:
+    #get the planner in here to use the shortest path function
+    def __init__(self) -> None:
+        self.planner = Planner.Planner()
 
     def shortest_path_length(self, graph: MultiDiGraph, start_node: int, end_node: int) -> float:
         """Calculate the distance in meters of the shortest path.
@@ -78,7 +82,7 @@ class Analyzer:
         """
         Calculates the total positive elevation difference along a specified path within a graph.
 
-        Parameters
+        Args
         ----------
         - self: Instance of the class.
         - graph: Graph containing nodes and edges.
@@ -132,7 +136,7 @@ class Analyzer:
         """
         Identifies and returns the indices of the routes with lengths closest to a specified maximum length.
 
-        Parameters
+        Args
         ----------
         - self: Instance of the class.
         - paths: List of routes represented as nodes or edges.
@@ -189,5 +193,50 @@ class Analyzer:
             height_diffs[path_index] = abs(elevation_diff_input - elevation_diff)
             print("__________________________________________________________")
         return height_diffs
+    
+
+    def get_paths_and_path_lengths(self, graph, leaf_paths: list) -> list:
+        """Gets the paths and path lengths from a list of leaf paths
+
+        Args
+        ----
+            graph (MultiDiGraph): Instance of an osmnx graph.
+            leaf_paths (list): List of leaf paths.
+
+        Returns
+        -------
+            paths (list): List of paths.
+            path_lengths (list): List of path lengths.
+
+        The indices of the two lists match woith eachother.
+
+            """
+        paths = []
+        path_lengths = []
+        for temp_path in leaf_paths:
+            path = []
+            temp_path_lengths = []
+            # Loop through all shortest paths between the point and add them to 1 path (cyclus)
+            for i in range(0, len(temp_path) - 1):
+                j = i + 1
+                if j >= len(temp_path):
+                    j = 0
+                try:
+                    temp_path_lengths.append(self.shortest_path_length(graph, temp_path[i], temp_path[j]))
+                    for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
+                        path.append(node)
+                    # remove last node because the last in the final casce it adds the last and the last
+                    path.pop(-1)
+                    
+                except nx.exception.NetworkXNoPath:
+                    # No path, error
+                    print(f"No path from {temp_path[i]} to {temp_path[j]}")
+                    continue
+
+            if path != []:
+                #TODO: take out duplicate nodes between duplicate nodes maybe???
+                paths.append(path)
+                path_lengths.append(sum(temp_path_lengths) * 1000) 
+        return paths, path_lengths
 
     

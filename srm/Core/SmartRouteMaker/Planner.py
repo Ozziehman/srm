@@ -23,7 +23,7 @@ class Planner:
         """
         Calculates the index of the start point on a circular structure based on the specified flower angle and points per leaf.
 
-        Parameters
+        Args
         ----------
         - self: Instance of the class (assuming this method belongs to a class).
         - flower_angle: Angle (in radians) representing the desired direction of the circular structure.

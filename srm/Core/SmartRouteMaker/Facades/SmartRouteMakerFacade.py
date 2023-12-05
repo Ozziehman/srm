@@ -194,6 +194,7 @@ class SmartRouteMakerFacade():
 
             # Get the list in the correct order witht he correct nodes
             leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
+            #leaf paths only consists of the calculated nodes, these are later then converted to actual paths with all nodes
             leaf_paths.append(leaf_nodes)
             
             
@@ -205,37 +206,9 @@ class SmartRouteMakerFacade():
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
 
-        # Area for making the actual path and adding it into the paths list for evaluation
-        paths = []
-        path_lengths = []
-        #_________________________________________________________
-        # Iterate thorugh all possible paths and choose the one closest to the input of the user
+        # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
+        paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
         
-        for temp_path in leaf_paths:
-            path = []
-            temp_path_lengths = []
-            # Loop through all shortest paths between the point and add them to 1 path (cyclus)
-            for i in range(0, len(temp_path) - 1):
-                j = i + 1
-                if j >= len(temp_path):
-                    j = 0
-                try:
-                    temp_path_lengths.append(self.analyzer.shortest_path_length(graph, temp_path[i], temp_path[j]))
-                    for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
-                        path.append(node)
-                    # remove last node because the last in the final casce it adds the last and the last
-                    path.pop(-1)
-                    
-                except nx.exception.NetworkXNoPath:
-                    # No path error
-                    print(f"No path from {temp_path[i]} to {temp_path[j]}")
-                    continue
-
-            if path != []:
-                #TODO: take out duplicate nodes between duplicate nodes maybe???
-                paths.append(path)
-                path_lengths.append(sum(temp_path_lengths) * 1000)        
-
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
 
         height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
