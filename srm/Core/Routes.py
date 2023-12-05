@@ -40,7 +40,7 @@ def handle_circular_routing():
     srmf = srm.SmartRouteMakerFacade()
 
     #pass the form data to the facade
-    start = srmf.normalize_coordinates(request.form['start_point'])
+    start = srmf.normalize_coordinates(request.form['start_point2'])
     max_length = int(request.form['max_length'])
     total_elevation_diff = int(request.form['total_elevation_diff'])
     
