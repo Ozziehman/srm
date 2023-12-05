@@ -156,7 +156,6 @@ class Visualizer:
         ----------
         - path (list): List of paths representing leaf nodes.
         - graph (MultiDiGraph): The graph containing node coordinates.
-        - save_path (str, optional): Path to save the plot image. If None, the plot is not saved.
 
         Returns
         -------

@@ -101,7 +101,7 @@ class SmartRouteMakerFacade():
 
         Returns
         -------
-        Output with all relavtive information for further analysis and visualization.
+        Output with all relative information for further analysis and visualization.
 
         Functionality
         -------------
