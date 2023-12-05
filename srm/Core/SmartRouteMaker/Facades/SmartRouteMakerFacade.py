@@ -143,7 +143,7 @@ class SmartRouteMakerFacade():
         #print("Inputted elevation difference: ", elevation_diff_input)
         #print("...........................................")
        
-
+        #region Calculate the leaf paths
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
 
@@ -170,7 +170,7 @@ class SmartRouteMakerFacade():
 
             # Get the node closest to the center of the leaf
             leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
-            #test print
+
             #print("leaf_center: ", "(", graph.nodes[leaf_center_node]["x"], ",",  graph.nodes[leaf_center_node]["y"], ")")
             # generate leaf angles depending on the numbe of leafs to be generated
             leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
@@ -202,7 +202,8 @@ class SmartRouteMakerFacade():
             #for i in leaf_nodes:
             #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
             #print("__________________________________________________________")
-         
+        #endregion
+        
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
 
@@ -237,7 +238,7 @@ class SmartRouteMakerFacade():
         print("path length (closest to input) meter: ", round(path_length))
         print("elevation difference: ", elevation_diff)
 
-        #_________________________________________________________
+        #region Visualize the route
 
             # Visualize the route
         if "analyze" in options and options['analyze']:
@@ -273,6 +274,7 @@ class SmartRouteMakerFacade():
         }
 
         return output
+    #endregion
 
     def normalize_coordinates(self, coordinates: str, delimiter: str = ",") -> Tuple:
             """Converts a front-end inputted coordinate string into a tuple of two floats.
