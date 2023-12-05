@@ -211,32 +211,47 @@ class SmartRouteMakerFacade():
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
         
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
+        # region get the best paths
+        if elevation_diff_input != None:
+            # Get the best matching path with elevation and length
+            height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
+            
+            # get the path with the lowest elevation difference from the "amount" paths closest to the length input
+            best_path_index = min(height_diffs, key=height_diffs.get)
+            print("Best path: ", best_path_index)
 
-        height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
-        
-        # get the path with the lowest elevation difference from the "amount" paths closest to the length input
-        best_path_index = min(height_diffs, key=height_diffs.get)
-        print("Best path: ", best_path_index)
+            # set the path as the best path and display
+            path = paths[best_path_index]
 
-        # set the path as the best path and display
-        path = paths[best_path_index]
+            #add start node to the end to make full circle
+            path.append(start_node)
+            self.visualizer.visualize_best_path(path, graph)
 
-        #add start node to the end to make full circle
-        path.append(start_node)
+            # Get the path length of the best path
+            path_length = path_lengths[best_path_index]
+            elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+            # Visualize the elevation profile of the path with matplotlib
+            self.visualizer.visualize_elevations(graph, path)
+            #print(path)
+            #print("path length (closest to input) meter: ", round(path_length))
+            #print("elevation difference: ", elevation_diff)
 
-        self.visualizer.visualize_best_path(path, graph)
+        elif elevation_diff_input == None:
+            #only go for the best length
+            path_length_diff = {}
+            for path_index in min_length_diff_routes_indeces:
+                temp_path_length = path_lengths[path_index]
+                path_length_diff[path_index] = abs(temp_path_length - max_length)
+            # get path matching the length input the best and show the elevation of the path
+            best_path_index = min(path_length_diff, key=path_length_diff.get)
+            print("Best path: ", best_path_index)
+            path = paths[best_path_index]
+            self.visualizer.visualize_best_path(path, graph)
+            path_length = path_lengths[best_path_index]
+            elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+            self.visualizer.visualize_elevations(graph, path)
 
-        # Get the path length of the best path
-        path_length = path_lengths[best_path_index]
-        
-        elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
-        # Visualize the elevation profile of the path with matplotlib
-        self.visualizer.visualize_elevations(graph, path)
-
-        
-        #print(path)
-        print("path length (closest to input) meter: ", round(path_length))
-        print("elevation difference: ", elevation_diff)
+        #endregion
 
         #region Visualize the route
 
