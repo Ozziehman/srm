@@ -1,4 +1,5 @@
 const startPointInput = document.getElementById('start_point');
+const startPointInput2 = document.getElementById('start_point2');
 const endPointInput = document.getElementById('end_point');
 const contextMenu = document.getElementById('context-menu');
 var lastClickedPosition = null;
@@ -30,11 +31,15 @@ map.on('contextmenu', function(event) {
 /**
  * Function that sets the start or endpoint of the route.
  */
-function setPosition(type)
-{
-    if(!['start', 'end'].includes(type)) return;
+function setPosition(type) {
+    if (!['start', 'end'].includes(type)) return;
 
-    type === 'start' ? startPointInput.value = lastClickedPosition : endPointInput.value = lastClickedPosition;
+    if (type === 'start') {
+        startPointInput.value = lastClickedPosition;
+        startPointInput2.value = lastClickedPosition;
+    } else {
+        endPointInput.value = lastClickedPosition;
+    }
 
     contextMenu.classList.remove('visible');
 }
