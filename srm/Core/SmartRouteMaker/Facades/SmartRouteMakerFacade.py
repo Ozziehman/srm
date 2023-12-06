@@ -142,11 +142,9 @@ class SmartRouteMakerFacade():
         #region Calculate the leaf paths
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
-
         start_time = time.time()
         # create list of multiple leaf path to evaluate LATER
         leaf_paths = []
-        # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle (EXAMPLE)
         for flower_angle in flower_angles:
 
             #calculate where to put the start point in the circle
@@ -168,8 +166,7 @@ class SmartRouteMakerFacade():
             # Get the node closest to the center of the leaf
             leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
 
-            #print("leaf_center: ", "(", graph.nodes[leaf_center_node]["x"], ",",  graph.nodes[leaf_center_node]["y"], ")")
-            # generate leaf angles depending on the numbe of leafs to be generated
+            # generate leaf angles depending on the number of leafs to be generated
             leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
             #create leaf nodes list for each leaf
             leaf_nodes = []
@@ -186,19 +183,12 @@ class SmartRouteMakerFacade():
 
                 leaf_node = self.graph.closest_node(graph, (leaf_node_lat, leaf_node_lon))
 
-                # remove double nodes later on, but not right now to keep the start_index correct
                 leaf_nodes.append(leaf_node)
 
-            # Get the list in the correct order witht he correct nodes
+            # Get the list in the correct order with the start node included
             leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
-            #leaf paths only consists of the calculated nodes, these are later then converted to actual paths with all nodes
+            #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
             leaf_paths.append(leaf_nodes)
-            
-            
-            #test print
-            #for i in leaf_nodes:
-            #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
-            #print("__________________________________________________________")
         #endregion
         end_time = time.time()
         print("Time to calculate leaf paths: ", end_time - start_time)
