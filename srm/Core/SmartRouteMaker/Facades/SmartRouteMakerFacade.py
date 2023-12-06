@@ -186,7 +186,8 @@ class SmartRouteMakerFacade():
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
         start_time_leafs = time.time()
         print(mp.cpu_count())
-        # create list of multiple leaf path to evaluate LATER
+
+        # create list of multiple leaf path to evaluate LATER with multiprocessing
         with mp.Pool(mp.cpu_count()) as pool:
             func = partial(self.calculate_leaf_path, start_node=start_node, radius=radius, variance=variance, points_per_leaf=points_per_leaf, graph=graph)
             leaf_paths = pool.map(func, flower_angles)
@@ -198,10 +199,11 @@ class SmartRouteMakerFacade():
 
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
-
+        start_time = time.time()
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
-        
+        end_time = time.time()
+        print("Time to calculate all FULL PATHS  ", end_time - start_time)
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
 
         #______________________________________________________________

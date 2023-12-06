@@ -209,6 +209,7 @@ class Analyzer:
         The indices of the two lists match woith eachother.
 
             """
+        #TODO make this function multiprocessed
         paths = []
         path_lengths = []
         for temp_path in leaf_paths:
