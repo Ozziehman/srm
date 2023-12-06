@@ -1,3 +1,4 @@
+import time
 from typing import Tuple
 import math
 import numpy as np
@@ -125,7 +126,7 @@ class SmartRouteMakerFacade():
         radius = (max_length) / (2 * math.pi)
          # Has impact on the size of the circles(leafs)
         variance = 1
-        additonal_variance = 1.6 #used for loading in a larger graph than necessary for more headroom additive to variance ALWAYS > 1
+        additonal_variance = 1.1 #used for loading in a larger graph than necessary for more headroom additive to variance ALWAYS > 1
         
         # Load the graph
         graph = self.graph.full_geometry_point_graph(start_coordinates, radius = radius * (variance + additonal_variance)) #create a slightly larger map than necessary for more headroom
@@ -142,6 +143,7 @@ class SmartRouteMakerFacade():
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
 
+        start_time = time.time()
         # create list of multiple leaf path to evaluate LATER
         leaf_paths = []
         # directions: 0, 45, 90, 135, 180, 225, 270, 315 (E SE S SW W NW N NE) each direction generate a circle (EXAMPLE)
@@ -198,7 +200,8 @@ class SmartRouteMakerFacade():
             #    print("(", graph.nodes[i]["x"], ",",  graph.nodes[i]["y"], ")") 
             #print("__________________________________________________________")
         #endregion
-        
+        end_time = time.time()
+        print("Time to calculate leaf paths: ", end_time - start_time)
         #______________________________________________________________
 
         # Visualize the leaf points
