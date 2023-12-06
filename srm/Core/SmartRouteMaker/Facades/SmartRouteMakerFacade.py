@@ -85,13 +85,14 @@ class SmartRouteMakerFacade():
     def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, options: dict) -> dict:
 
         """
-        Generates a flower-like route structure on a given graph, where each petal represents a circular path around the starting node.
-        The algorithm places points on each petal, forming a route that connects them. The number of petals, points per petal, and other parameters can be adjusted.
+        Generates a flower-like route structure on a given graph, where each leaf represents a circular path around the starting node.
+        The algorithm places points on each petal, forming a route that connects them. The number of leafs, points per leaf, and other parameters can be adjusted.
 
         Parameters
         ----------
         - start_coordinates (tuple): The coordinates (latitude, longitude) of the starting point.
         - max_length (int): The maximum desired length of the generated route.
+        - elevation_diff_input (int): The maximum desired elevation difference of the generated route.
         - options (dict): Additional options for analysis and visualization.
 
         Returns
@@ -104,7 +105,6 @@ class SmartRouteMakerFacade():
         - Calculates the route by connecting points on each leaf.
         - Evaluates multiple paths and selects the one closest to the specified user input.
         - Performs path analysis, surface distribution analysis, and optionally visualizes the route.
-        - Returns a comprehensive output dictionary with relevant information for further analysis and visualization.
 
         Note: This function is designed for route planning on a graph, considering geographical coordinates and various path attributes.
 
