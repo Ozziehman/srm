@@ -159,15 +159,13 @@ class Analyzer:
         for i in range(len(paths)):
             path_length_diff[i] = abs(path_lengths[i] - max_length)
 
-        print(path_length_diff)
-        print("__________________________________________________________")
 
         # Get the 10 paths closest to the input length and save their indices
         min_length_diff_routes_indices = []
         sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/5)]  # Minimum 10
         min_length_diff_routes_indices.extend(sorted_indices)
 
-        print(min_length_diff_routes_indices)
+        print("Routes closest in length: ", min_length_diff_routes_indices)
         print("__________________________________________________________")
 
         return min_length_diff_routes_indices

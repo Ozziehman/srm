@@ -115,11 +115,11 @@ class SmartRouteMakerFacade():
         route_info = plan_circular_route_flower(start_coords, max_route_length, analysis_options)
         """
         print("flower route")
-        
+        #region Initial parameters and variables
         # Number of circles(leafs) drawn around start as flower
-        leafs = 32
+        leafs = 64
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 6
+        points_per_leaf = 5
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
@@ -132,11 +132,12 @@ class SmartRouteMakerFacade():
         
         # Determine the start node based on the start coordinates
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
-        #print("Start: ", "(", graph.nodes[start_node]["x"], ",", graph.nodes[start_node]["y"], ")")
-        #print("Inputted route length: ", max_length)
-        #print("Inputted elevation difference: ", elevation_diff_input)
-        #print("...........................................")
-       
+        print("Inputted route length: ", max_length)
+        print("Inputted elevation difference: ", elevation_diff_input)
+        #endregion
+
+        #______________________________________________________________
+
         #region Calculate the leaf paths
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
@@ -198,6 +199,8 @@ class SmartRouteMakerFacade():
             #print("__________________________________________________________")
         #endregion
         
+        #______________________________________________________________
+
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
 
@@ -205,7 +208,11 @@ class SmartRouteMakerFacade():
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
         
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
+
+        #______________________________________________________________
+
         # region get the best paths
+        #TODO: IF there are more than length and height implemented in the future, you should work with scores, give each path a score and take the best one
         if elevation_diff_input != None:
             # Get the best matching path with elevation and length
             height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
@@ -226,9 +233,8 @@ class SmartRouteMakerFacade():
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             # Visualize the elevation profile of the path with matplotlib
             self.visualizer.visualize_elevations(graph, path)
-            #print(path)
-            #print("path length (closest to input) meter: ", round(path_length))
-            #print("elevation difference: ", elevation_diff)
+            print("path length (closest to input) meter: ", round(path_length))
+            print("elevation difference: ", elevation_diff)
 
         elif elevation_diff_input == None:
             #only go for the best length
@@ -246,6 +252,8 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_elevations(graph, path)
 
         #endregion
+        
+        #______________________________________________________________
 
         #region Visualize the route
 
@@ -268,6 +276,9 @@ class SmartRouteMakerFacade():
             surface_dist_legenda = None
 
         simple_polylines = self.visualizer.extract_polylines_from_folium_map(graph, path, invert=False)
+        #endregion
+        
+        #______________________________________________________________
 
         output = {
             "start_node": start_node,
@@ -283,7 +294,7 @@ class SmartRouteMakerFacade():
         }
 
         return output
-    #endregion
+    
 
     def normalize_coordinates(self, coordinates: str, delimiter: str = ",") -> Tuple:
             """Converts a front-end inputted coordinate string into a tuple of two floats.
