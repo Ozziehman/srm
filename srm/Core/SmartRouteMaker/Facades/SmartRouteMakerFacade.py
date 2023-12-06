@@ -189,9 +189,10 @@ class SmartRouteMakerFacade():
             leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
             #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
             leaf_paths.append(leaf_nodes)
-        #endregion
-        end_time = time.time()
+            end_time = time.time()
         print("Time to calculate leaf paths: ", end_time - start_time)
+        #endregion
+
         #______________________________________________________________
 
         # Visualize the leaf points
