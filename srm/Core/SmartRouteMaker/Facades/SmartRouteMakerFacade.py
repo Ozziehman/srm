@@ -142,7 +142,7 @@ class SmartRouteMakerFacade():
         #region Calculate the leaf paths
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
-        start_time = time.time()
+        start_time_leafs = time.time()
         # create list of multiple leaf path to evaluate LATER
         leaf_paths = []
         for flower_angle in flower_angles:
@@ -190,7 +190,7 @@ class SmartRouteMakerFacade():
             #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
             leaf_paths.append(leaf_nodes)
             end_time = time.time()
-        print("Time to calculate leaf paths: ", end_time - start_time)
+        print("Time to calculate all leaf nodes: ", end_time - start_time_leafs)
         #endregion
 
         #______________________________________________________________
