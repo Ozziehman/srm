@@ -201,6 +201,7 @@ class SmartRouteMakerFacade():
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
         start_time = time.time()
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
+        TRY TO MULTIPROCESS THIS
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
