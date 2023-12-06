@@ -2,6 +2,9 @@ import time
 from typing import Tuple
 import math
 import numpy as np
+import multiprocessing as mp
+from networkx import MultiDiGraph
+from functools import partial
 
 
 from ...SmartRouteMaker import Analyzer
@@ -80,6 +83,45 @@ class SmartRouteMakerFacade():
 
         return output
 
+    def calculate_leaf_path(self, flower_angle, start_node, radius, variance, points_per_leaf, graph: MultiDiGraph):
+        #calculate where to put the start point in the circle
+        start_point_index = self.planner.calculate_start_point_index(flower_angle, points_per_leaf)
+
+        flower_direction = flower_angle
+
+        # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
+        difference_lon = math.cos(flower_direction) * radius * variance / 111000
+        difference_lat = math.sin(flower_direction) * radius * variance / 111000
+
+        leaf_center_lon = float(graph.nodes[start_node]["x"]) + float(difference_lon)
+        leaf_center_lat = float(graph.nodes[start_node]["y"]) + float(difference_lat)
+
+        # Get the node closest to the center of the leaf
+        leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
+
+        # generate leaf angles depending on the number of leafs to be generated
+        leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
+        #create leaf nodes list for each leaf
+        leaf_nodes = []
+        # Create a circle around the current leaf_center_node an dcreate points on this leaf to make a route
+        for leaf_angle in leaf_angles:
+
+            leaf_direction = leaf_angle
+            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
+            difference_lon = math.cos(leaf_direction) * radius * variance / 111000
+            difference_lat = math.sin(leaf_direction) * radius * variance / 111000
+
+            leaf_node_lon = float(graph.nodes[leaf_center_node]["x"]) + float(difference_lon)
+            leaf_node_lat = float(graph.nodes[leaf_center_node]["y"]) + float(difference_lat)
+
+            leaf_node = self.graph.closest_node(graph, (leaf_node_lat, leaf_node_lon))
+
+            leaf_nodes.append(leaf_node)
+
+        # Get the list in the correct order with the start node included
+        leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
+        #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
+        return leaf_nodes
 
     # Own algorithm here, flower idea
     def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, options: dict) -> dict:
@@ -120,7 +162,7 @@ class SmartRouteMakerFacade():
         # Number of circles(leafs) drawn around start as flower
         leafs = 64
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        points_per_leaf = 5
+        points_per_leaf = 6
         
         # calculate the radius the circles(leafs) need to be
         radius = (max_length) / (2 * math.pi)
@@ -143,54 +185,13 @@ class SmartRouteMakerFacade():
         # Generate array of 360 equal sized angles, basically a circle, duhh
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
         start_time_leafs = time.time()
+        print(mp.cpu_count())
         # create list of multiple leaf path to evaluate LATER
-        leaf_paths = []
-        for flower_angle in flower_angles:
-
-            #calculate where to put the start point in the circle
-            start_point_index = self.planner.calculate_start_point_index(flower_angle, points_per_leaf)
-            
-            #print("Unrounded start_point index: ", start_point_index)
-
-            flower_direction = flower_angle
-
-            #print("Flower direction: ",flower_direction)
-            
-            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
-            difference_lon = math.cos(flower_direction) * radius * variance / 111000
-            difference_lat = math.sin(flower_direction) * radius * variance / 111000
-                  
-            leaf_center_lon = float(graph.nodes[start_node]["x"]) + float(difference_lon)
-            leaf_center_lat = float(graph.nodes[start_node]["y"]) + float(difference_lat)
-
-            # Get the node closest to the center of the leaf
-            leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
-
-            # generate leaf angles depending on the number of leafs to be generated
-            leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
-            #create leaf nodes list for each leaf
-            leaf_nodes = []
-            # Create a circle around the current leaf_center_node an dcreate points on this leaf to make a route
-            for leaf_angle in leaf_angles:
-                
-                leaf_direction = leaf_angle
-                # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
-                difference_lon = math.cos(leaf_direction) * radius * variance / 111000
-                difference_lat = math.sin(leaf_direction) * radius * variance / 111000
-                
-                leaf_node_lon = float(graph.nodes[leaf_center_node]["x"]) + float(difference_lon)
-                leaf_node_lat = float(graph.nodes[leaf_center_node]["y"]) + float(difference_lat)
-
-                leaf_node = self.graph.closest_node(graph, (leaf_node_lat, leaf_node_lon))
-
-                leaf_nodes.append(leaf_node)
-
-            # Get the list in the correct order with the start node included
-            leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
-            #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
-            leaf_paths.append(leaf_nodes)
-            end_time = time.time()
-        print("Time to calculate all leaf nodes: ", end_time - start_time_leafs)
+        with mp.Pool(mp.cpu_count()) as pool:
+            func = partial(self.calculate_leaf_path, start_node=start_node, radius=radius, variance=variance, points_per_leaf=points_per_leaf, graph=graph)
+            leaf_paths = pool.map(func, flower_angles)
+        end_time_leafs = time.time()
+        print("Time to calculate all leaf nodes: ", end_time_leafs - start_time_leafs)
         #endregion
 
         #______________________________________________________________
