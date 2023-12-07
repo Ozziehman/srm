@@ -119,6 +119,7 @@ class SmartRouteMakerFacade():
         analysis_options = {"analyze": True, "surface_dist": True}
         route_info = plan_circular_route_flower(start_coords, max_route_length, analysis_options)
         """
+        start_time_full = time.time()
         print("flower route")
         #region Initial parameters and variables
         # Number of circles(leafs) drawn around start as flower
@@ -251,7 +252,8 @@ class SmartRouteMakerFacade():
             "simple_polylines": simple_polylines,
             "elevation_diff": elevation_diff
         }
-
+        end_time_full = time.time()
+        print("Total time: ", end_time_full - start_time_full)
         return output
     
 
