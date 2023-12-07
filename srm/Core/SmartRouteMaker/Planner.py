@@ -2,8 +2,15 @@ import osmnx as ox
 from typing import Tuple, List
 from networkx import MultiDiGraph
 import math
+import numpy as np
+
+import srm.Core.SmartRouteMaker.Graph as Graph
 
 class Planner:
+
+    def __init__(self) -> None:
+        self.graph = Graph.Graph()
+        
 
     def shortest_path(self, graph: MultiDiGraph, start_node: int, end_node: int) -> List:
         """Get the shortest path between two nodes in a graph.
@@ -49,3 +56,43 @@ class Planner:
             start_point_index = start_point_index - points_per_leaf
 
         return start_point_index
+    
+    def calculate_leaf_nodes(self, flower_angle, start_node, radius, variance, points_per_leaf, graph: MultiDiGraph):
+        #calculate where to put the start point in the circle
+        start_point_index = self.calculate_start_point_index(flower_angle, points_per_leaf)
+
+        flower_direction = flower_angle
+
+        # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
+        difference_lon = math.cos(flower_direction) * radius * variance / 111000
+        difference_lat = math.sin(flower_direction) * radius * variance / 111000
+
+        leaf_center_lon = float(graph.nodes[start_node]["x"]) + float(difference_lon)
+        leaf_center_lat = float(graph.nodes[start_node]["y"]) + float(difference_lat)
+
+        # Get the node closest to the center of the leaf
+        leaf_center_node = self.graph.closest_node(graph, (leaf_center_lat, leaf_center_lon)) # lat = y, lon = x
+
+        # generate leaf angles depending on the number of leafs to be generated
+        leaf_angles = np.linspace(0, 2 * np.pi, points_per_leaf)
+        #create leaf nodes list for each leaf
+        leaf_nodes = []
+        # Create a circle around the current leaf_center_node an dcreate points on this leaf to make a route
+        for leaf_angle in leaf_angles:
+
+            leaf_direction = leaf_angle
+            # Calculate the center of each leaf, based on the direction and the radius. Needs to be converted back to lon and lat, 111000 is the amount of meters in 1 degree of longitude/latitude
+            difference_lon = math.cos(leaf_direction) * radius * variance / 111000
+            difference_lat = math.sin(leaf_direction) * radius * variance / 111000
+
+            leaf_node_lon = float(graph.nodes[leaf_center_node]["x"]) + float(difference_lon)
+            leaf_node_lat = float(graph.nodes[leaf_center_node]["y"]) + float(difference_lat)
+
+            leaf_node = self.graph.closest_node(graph, (leaf_node_lat, leaf_node_lon))
+
+            leaf_nodes.append(leaf_node)
+
+        # Get the list in the correct order with the start node included
+        leaf_nodes = self.graph.insert_start_node_and_rearrange(leaf_nodes, start_node, start_point_index)
+        #leaf paths only consist of the calculated nodes, these are later then converted to actual paths with all nodes
+        return leaf_nodes
