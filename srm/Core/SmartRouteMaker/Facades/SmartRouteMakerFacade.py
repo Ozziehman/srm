@@ -214,7 +214,8 @@ class SmartRouteMakerFacade():
         #endregion
         
         #______________________________________________________________
-
+        end_time_full = time.time()
+        print("Total time: ", end_time_full - start_time_full)
         #region Visualize the route
 
             # Visualize the route
@@ -252,8 +253,8 @@ class SmartRouteMakerFacade():
             "simple_polylines": simple_polylines,
             "elevation_diff": elevation_diff
         }
-        end_time_full = time.time()
-        print("Total time: ", end_time_full - start_time_full)
+        
+        
         return output
     
 
