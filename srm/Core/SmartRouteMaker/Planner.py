@@ -58,6 +58,24 @@ class Planner:
         return start_point_index
     
     def calculate_leaf_nodes(self, flower_angle, start_node, radius, variance, points_per_leaf, graph: MultiDiGraph):
+        """
+        This method generates the nodes for each leaf in a flower-like pattern.
+
+        Parameters:
+        flower_angle (float): The angle of the flower pattern in radians.
+        points_per_leaf (int): The number of points (nodes) to generate for each leaf.
+        radius (float): The radius of each leaf in the flower pattern.
+        variance (float): The variance in the radius of each leaf.
+        start_node (int): The node ID of the start node.
+        graph (networkx.Graph): The graph representing the area.
+
+        Returns:
+        list: A list of node IDs representing the nodes for each leaf in the flower pattern.
+
+        The method first calculates the center of each leaf based on the flower_angle, radius, and variance.
+        It then generates a number of points (nodes) evenly spaced around the circumference of each leaf.
+        The nodes are ordered in the list such that the start node is first.
+        """
         #calculate where to put the start point in the circle
         start_point_index = self.calculate_start_point_index(flower_angle, points_per_leaf)
 
