@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, render_template, request, url_for
 from .SmartRouteMaker.Facades import SmartRouteMakerFacade as srm
+import ast
 
 core = Blueprint('core', __name__,
     static_folder='Static',
@@ -56,7 +57,15 @@ def handle_circular_routing():
         surfaces=route['surface_dist'],
         surfaceDistLegenda=route['surface_dist_legenda'],
         surfaceDistVisualisation=route['surface_dist_visualisation'],
+        path=route['path'],
         path_length=route['path_length'],
         elevation_diff=route['elevation_diff'],
         routeVisualisation=route['simple_polylines']
     )
+
+@core.route('/export_GPX', methods=['POST'])
+def export_GPX():
+    node_ids_str = request.form.get('node_ids', '')
+    node_ids = ast.literal_eval(node_ids_str)
+    srmf = srm.SmartRouteMakerFacade()
+    return srmf.export_GPX(node_ids)

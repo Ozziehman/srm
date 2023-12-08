@@ -4,6 +4,12 @@
 
 {% block analytics %}
     <p class="text-white">
+        <form action="{{ url_for('core.export_GPX') }}" method="post">
+            <input type="hidden" name="node_ids" value="{{ path }}"">
+            <button type="submit" class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700">
+                Export GPX
+            </button>
+        </form>
         <span class="font-bold">Lengte van de route</span>
         <span class="block">{{ path_length }}km</span>
     </p>

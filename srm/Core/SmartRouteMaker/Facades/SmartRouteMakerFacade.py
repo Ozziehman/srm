@@ -258,6 +258,9 @@ class SmartRouteMakerFacade():
         
         return output
     
+    def export_GPX(self, node_ids: list):
+        return self.graph.export_GPX(node_ids)
+    
 
     def normalize_coordinates(self, coordinates: str, delimiter: str = ",") -> Tuple:
             """Converts a front-end inputted coordinate string into a tuple of two floats.
