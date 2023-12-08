@@ -112,7 +112,7 @@ class Graph:
     
     def export_GPX(self, node_ids) -> Response:
         overpass_url = "http://overpass-api.de/api/interpreter"
-    
+
         query = f"""
             [out:json];
             node(id:{",".join(map(str, node_ids))});
@@ -120,25 +120,28 @@ class Graph:
         """
         response = requests.get(overpass_url, params={"data": query})
 
-        # Status code 200 scuces
         if response.status_code == 200:
             data = response.json()
 
+            # dictrionary to the nodeids in correct order
+            id_to_element = {str(element['id']): element for element in data['elements'] if element['type'] == 'node'}
+
             # Create GPX file
             gpx = Element('gpx', attrib={'version': '1.1', 'xmlns': 'http://www.topografix.com/GPX/1/1'})
-            
-            for element in data['elements']:
-                if element['type'] == 'node':
+
+            # iterate through the original order of the node ids
+            for node_id in node_ids:
+                element = id_to_element.get(str(node_id))
+                if element:
                     node = SubElement(gpx, 'wpt', attrib={'lat': str(element['lat']), 'lon': str(element['lon'])})
                     SubElement(node, 'name').text = str(element['id'])
 
             gpx_file_content = self.prettify(gpx)
 
-            # Return GPX content as a Flask Response for downloading the thingy
             return Response(gpx_file_content, content_type="application/gpx+xml",
                             headers={"Content-Disposition": "attachment; filename=route.gpx"})
         else:
-            return f"Error: {response.status_code}. Failed to retrieve OSM data."
+            return f"Error: {response.status_code}. Failed to get OSM data."
 
     
     def prettify(self, elem):
