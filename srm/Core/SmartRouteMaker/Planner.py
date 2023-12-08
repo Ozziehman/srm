@@ -61,7 +61,8 @@ class Planner:
         """
         This method generates the nodes for each leaf in a flower-like pattern.
 
-        Parameters:
+        Parameters
+        ----------
         flower_angle (float): The angle of the flower pattern in radians.
         points_per_leaf (int): The number of points (nodes) to generate for each leaf.
         radius (float): The radius of each leaf in the flower pattern.
@@ -69,7 +70,8 @@ class Planner:
         start_node (int): The node ID of the start node.
         graph (networkx.Graph): The graph representing the area.
 
-        Returns:
+        Returns
+        -------
         list: A list of node IDs representing the nodes for each leaf in the flower pattern.
 
         The method first calculates the center of each leaf based on the flower_angle, radius, and variance.

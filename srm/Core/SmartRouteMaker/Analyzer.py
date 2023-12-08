@@ -171,7 +171,23 @@ class Analyzer:
         return min_length_diff_routes_indices
     
     def get_height_diffs(self, graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) -> dict:
-        """Gets the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index"""
+        """
+        Calculate the absolute difference between the elevation difference of each path and the inputted elevation difference.
+
+        Parameters
+        ----------
+        graph (networkx.Graph): The graph representing the area.
+        paths (list): A list of paths, where each path is a list of node IDs.
+        path_lengths (list): A list of the lengths of each path.
+        min_length_diff_routes_indeces (list): A list of indices of the paths that have minimal length difference.
+        elevation_diff_input (float): The desired elevation difference.
+
+        Returns
+        -------
+        dict: A dictionary where the keys are the indices of the paths and the values are the absolute differences between the elevation difference of the corresponding path and the inputted elevation difference.
+
+        The method calculates the elevation difference for each path in min_length_diff_routes_indeces, and then calculates the absolute difference between this elevation difference and the inputted elevation difference. These differences are stored in a dictionary, which is then returned.
+        """
         height_diffs = {}
 
         #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
