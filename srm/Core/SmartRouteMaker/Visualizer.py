@@ -180,7 +180,21 @@ class Visualizer:
             plt.savefig(save_path, format="png")
 
     def visualize_elevations(self, graph, path):
-        """Visualize the elevations of a path and save the plot as an image."""
+        """
+        Visualize the elevations of a path and save the plot as an image.
+
+        Parameters:
+        graph (networkx.Graph): The graph representing the area.
+        path (list): A list of node IDs representing the path.
+
+        This method retrieves the elevation data for each node in the path using the SRTM library.
+        It then creates a plot of the elevation data using matplotlib, with the node index on the x-axis and the elevation on the y-axis.
+        The plot is saved as a PNG image at the specified save path.
+
+        If there is an error retrieving the elevation data for a node, an error message is printed and the node is skipped.
+
+        Note: The method uses the 'y' and 'x' attributes of the nodes in the graph to represent the latitude and longitude, respectively.
+        """
         elevation_data = srtm.get_data()
         elevation_nodes = []
         plt.clf()
