@@ -177,6 +177,7 @@ class SmartRouteMakerFacade():
             # Get the best matching path with elevation and length
             height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
             
+            #TODO Scoring system for multiple parameters could be implemented here in the future, then set the best_path_index to the path with the highest score
             # get the path with the lowest elevation difference from the "amount" paths closest to the length input
             best_path_index = min(height_diffs, key=height_diffs.get)
             print("Best path: ", best_path_index)
