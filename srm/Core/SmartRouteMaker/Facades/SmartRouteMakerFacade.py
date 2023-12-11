@@ -125,6 +125,7 @@ class SmartRouteMakerFacade():
         # Number of circles(leafs) drawn around start as flower
         leafs = 64
         # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
+        #TODO: make this amount scale with the cicumference of the circle for precision
         points_per_leaf = 5
         
         # calculate the radius the circles(leafs) need to be
