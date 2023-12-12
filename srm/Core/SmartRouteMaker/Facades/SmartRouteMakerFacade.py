@@ -44,9 +44,12 @@ class SmartRouteMakerFacade():
 
         # Get shortest path between start and end node
         path = self.planner.shortest_path(graph, start_node, end_node)
+        self.visualizer.visualize_best_path(path, graph)
         
 
         elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
+        self.visualizer.visualize_elevations(graph, path)
+
 
         path_length = self.analyzer.shortest_path_length(graph, start_node, end_node)
 
