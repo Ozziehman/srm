@@ -92,10 +92,9 @@ class Analyzer:
         -------
         - float: Total positive elevation difference along the specified path.
 
-        This function utilizes elevation data, possibly from the SRTM API, to retrieve elevation
+        This function utilizes elevation data, from the SRTM dataset to retrieve elevation
         values for nodes in the given path. It then calculates the positive elevation differences
-        between adjacent nodes and returns the total sum. Error handling is implemented for cases
-        where elevation data retrieval or difference calculation encounters issues.
+        between adjacent nodes and returns the total sum. 
 
         Example
         -------

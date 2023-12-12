@@ -111,6 +111,16 @@ class Graph:
     
     
     def export_GPX(self, node_ids) -> Response:
+        """Exports a list of node IDs to a GPX file.
+        Args
+        ----
+        - node_ids: List of node IDs to export.
+        Returns
+        -------
+        - Response: GPX file.
+        This function exports a list of node IDs to a GPX file. It first fetches the node data from the OpenStreetMap
+        API, then creates a GPX file from the data.
+        """
         overpass_url = "http://overpass-api.de/api/interpreter"
 
         query = f"""

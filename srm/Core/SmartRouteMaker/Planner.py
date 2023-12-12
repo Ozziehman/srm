@@ -32,7 +32,7 @@ class Planner:
 
         Args
         ----------
-        - self: Instance of the class (assuming this method belongs to a class).
+        - self: Instance of the class.
         - flower_angle: Angle (in radians) representing the desired direction of the circular structure.
         - points_per_leaf: Number of points or nodes in each leaf of the circular structure.
 
