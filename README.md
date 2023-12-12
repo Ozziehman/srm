@@ -8,8 +8,14 @@ Install the SRM requirements through the requirements file.
 $ pip install -r requirements.txt
 ```
 
-Run the flask app.
+Run the flask app. (development)
 
 ```
 $ flask --app srm run
 ```
+
+Run the flask app. (production, windows)
+```
+$ waitress-serve wsgi:app
+```
+hosted on localhost:8080
