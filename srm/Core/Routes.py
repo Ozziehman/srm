@@ -48,9 +48,12 @@ def handle_circular_routing():
     except:
         total_elevation_diff = None
     
-
-    route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, options={"analyze": True, "surface_dist": True})
-    
+    try:
+        hardened_percentage = int(request.form['hardened_percentage'])
+    except:
+        hardened_percentage = None
+        
+    route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, percentage_hard_input = hardened_percentage, options={"analyze": True, "surface_dist": True})
     
 
     return render_template('result.html', 
