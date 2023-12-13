@@ -176,7 +176,8 @@ class SmartRouteMakerFacade():
         #______________________________________________________________
 
         # region get the best paths
-        #TODO: IF there are more than length and height implemented in the future, you should work with scores, give each path a score and take the best one
+        #TODO: Clean this mess a bit 🤣 and maybe convert the height diff to percentages, to ensure the same weight for both parameters
+
         if elevation_diff_input != None or percentage_hard_input != None:
             
             # Get the best matching path with elevation and length

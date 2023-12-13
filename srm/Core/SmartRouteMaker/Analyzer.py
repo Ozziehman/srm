@@ -276,13 +276,12 @@ class Analyzer:
         The indices of the two lists match woith eachother.
 
             """
-        #TODO make this function multiprocessed
         paths = []
         path_lengths = []
         for temp_path in leaf_paths:
             path = []
             temp_path_lengths = []
-            # Loop through all shortest paths between the point and add them to 1 path (cyclus)
+            # Loop through all shortest paths between the point and add them to 1 path
             for i in range(0, len(temp_path) - 1):
                 j = i + 1
                 if j >= len(temp_path):
@@ -291,7 +290,7 @@ class Analyzer:
                     temp_path_lengths.append(self.shortest_path_length(graph, temp_path[i], temp_path[j]))
                     for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
                         path.append(node)
-                    # remove last node because the last in the final casce it adds the last and the last
+                    # remove last node because in the final case it adds the last and the last
                     path.pop(-1)
                     
                 except nx.exception.NetworkXNoPath:
@@ -300,7 +299,7 @@ class Analyzer:
                     continue
 
             if path != []:
-                #TODO: take out duplicate nodes between duplicate nodes maybe???
+                #TODO: take out duplicate nodes between duplicate nodes maybe??? to fix the appendages
                 paths.append(path)
                 path_lengths.append(sum(temp_path_lengths) * 1000) 
         return paths, path_lengths
