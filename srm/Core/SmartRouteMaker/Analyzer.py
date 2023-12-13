@@ -78,6 +78,58 @@ class Analyzer:
 
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
+
+    def get_surface_diffs(self, graph, paths: list, path_lengths: list, min_length_diff_routes_indeces, percentage_hard_input) -> dict:
+        # hardened surfaces
+        hardened_surfaces = [
+            'asphalt',
+            'concrete',
+            'paved',
+            'sett',
+            'tartan',
+            'metal',
+            'wood',
+            'compacted',
+            'bricks',
+            'salt'
+        ]
+
+        # unhardened surfaces
+        unhardened_surfaces = [
+            'unpaved',
+            'gravel',
+            'dirt',
+            'grass',
+            'sand',
+            'ground',
+            'clay',
+            'earth',
+            'fine_gravel',
+            'mud',
+            'pebblestone',
+            'unknown'
+        ]
+        
+        surfaces_hard_percentage = {}
+        #unhardenend is 100% - hardened%, obviously
+        for path_index in min_length_diff_routes_indeces:
+            analyzed_route = self.get_path_attributes(graph, paths[path_index])
+            surfaces = self.get_path_surface_distribution(analyzed_route)
+
+            for surface in hardened_surfaces:
+                if surface in surfaces:
+                    if path_index not in surfaces_hard_percentage:
+                        #convert to meters and to percentage of full path
+                        surfaces_hard_percentage[path_index] = surfaces[surface]*1000/path_lengths[path_index]
+                    else:
+                        surfaces_hard_percentage[path_index] += surfaces[surface]*1000/path_lengths[path_index]
+
+        for key, value in surfaces_hard_percentage.items():
+            surfaces_hard_percentage[key] = abs(percentage_hard_input - value)
+  
+        return surfaces_hard_percentage
+                    
+    
     def calculate_elevation_diff(self, graph, path) -> float:
         """
         Calculates the total positive elevation difference along a specified path within a graph.
@@ -252,5 +304,8 @@ class Analyzer:
                 paths.append(path)
                 path_lengths.append(sum(temp_path_lengths) * 1000) 
         return paths, path_lengths
+    
+
+
 
     

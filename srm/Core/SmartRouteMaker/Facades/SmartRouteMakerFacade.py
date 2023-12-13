@@ -89,7 +89,7 @@ class SmartRouteMakerFacade():
     
 
     # Own algorithm here, flower idea
-    def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, options: dict) -> dict:
+    def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
 
         """
         Generates a flower-like route structure on a given graph, where each leaf represents a circular path around the starting node.
@@ -177,16 +177,52 @@ class SmartRouteMakerFacade():
 
         # region get the best paths
         #TODO: IF there are more than length and height implemented in the future, you should work with scores, give each path a score and take the best one
-        if elevation_diff_input != None:
+        if elevation_diff_input != None or percentage_hard_input != None:
+            
             # Get the best matching path with elevation and length
-            height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
+
+            # only length and elevation
+            if elevation_diff_input != None and percentage_hard_input == None:
+                height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
+                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
+                for path_index in min_length_diff_routes_indeces:
+                    #the lower the score the better, (least difference with input)
+                    paths_with_scores[path_index] = height_diffs[path_index]
+                    print("path index(length and elev): ", path_index, " score: ", paths_with_scores[path_index])
+
+            # only length and surface
+            elif percentage_hard_input != None and elevation_diff_input == None:
+                percentage_hard_input /= 100 #make it a percentage
+                surface_diffs = self.analyzer.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
+                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
+                for path_index in min_length_diff_routes_indeces:
+                    #the lower the score the better, (least difference with input)
+                    paths_with_scores[path_index] = surface_diffs[path_index]
+                    print("path index (length and surf): ", path_index, " score: ", paths_with_scores[path_index])
+
+            # both length, elevation and surface
+            elif elevation_diff_input != None and percentage_hard_input != None:
+                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
+                
+                height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
+                
+                percentage_hard_input /= 100 #make it a percentage
+                surface_diffs = self.analyzer.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
+                
+                for path_index in min_length_diff_routes_indeces:
+                    #the lower the score the better, (least difference with input)
+                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index]
+                    print("path index (both): ", path_index, " score: ", paths_with_scores[path_index])
+    
+            
+            
             
             #TODO Scoring system for multiple parameters could be implemented here in the future, then set the best_path_index to the path with the highest score
             # get the path with the lowest elevation difference from the "amount" paths closest to the length input
-            best_path_index = min(height_diffs, key=height_diffs.get)
+            best_path_index = min(paths_with_scores, key=paths_with_scores.get)
             print("Best path: ", best_path_index)
 
-            # set the path as the best path and display
+            # set the path as the best path and displays
             path = paths[best_path_index]
 
             #add start node to the end to make full circle
@@ -201,7 +237,8 @@ class SmartRouteMakerFacade():
             print("path length (closest to input) meter: ", round(path_length))
             print("elevation difference: ", elevation_diff)
 
-        elif elevation_diff_input == None:
+        # only length
+        elif elevation_diff_input == None and percentage_hard_input == None:
             #only go for the best length
             path_length_diff = {}
             for path_index in min_length_diff_routes_indeces:
