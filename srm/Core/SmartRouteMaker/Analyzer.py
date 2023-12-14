@@ -80,6 +80,22 @@ class Analyzer:
     
 
     def get_surface_diffs(self, graph, paths: list, path_lengths: list, min_length_diff_routes_indeces, percentage_hard_input) -> dict:
+        """
+        Calculate the absolute difference between the surface distribution of each path and the inputted percentage of hard surfaces.
+        
+        Args
+        ----------
+        - self: Instance of the class.
+        - graph: Graph containing nodes and edges.
+        - paths: List of routes represented as nodes or edges.
+        - path_lengths: List of corresponding lengths for each route.
+        - min_length_diff_routes_indeces: List of indices of the routes that have minimal length difference.
+        - percentage_hard_input: Inputted percentage of hard surfaces.
+
+        Returns
+        -------
+        - dict: Dictionary where the keys are the indices of the paths and the values are the absolute differences between the surface distribution of the corresponding path and the inputted percentage of hard surfaces.
+        """
         # hardened surfaces
         hardened_surfaces = [
             'asphalt',
@@ -91,7 +107,8 @@ class Analyzer:
             'wood',
             'compacted',
             'bricks',
-            'salt'
+            'salt',
+            'paving_stones'
         ]
 
         # unhardened surfaces
@@ -128,8 +145,61 @@ class Analyzer:
             surfaces_hard_percentage[key] = abs(percentage_hard_input - value)
   
         return surfaces_hard_percentage
-                    
-    
+
+    def calculate_percentage_hardened_surfaces(self, graph, path: list, path_length: list) -> float: 
+        """
+        Calculate the percentage of hard surfaces in a path.
+
+        Args
+        ----------
+        - self: Instance of the class.
+        - graph: Graph containing nodes and edges.
+        - path: Path within the graph for percentage calculation.
+
+        Returns
+        -------
+        - float: Percentage of hard surfaces along the specified path.
+        """
+        # hardened surfaces
+        hardened_surfaces = [
+            'asphalt',
+            'concrete',
+            'paved',
+            'sett',
+            'tartan',
+            'metal',
+            'wood',
+            'compacted',
+            'bricks',
+            'salt'
+        ]
+
+        # unhardened surfaces
+        unhardened_surfaces = [
+            'unpaved',
+            'gravel',
+            'dirt',
+            'grass',
+            'sand',
+            'ground',
+            'clay',
+            'earth',
+            'fine_gravel',
+            'mud',
+            'pebblestone',
+            'unknown'
+        ]          
+        percentage_hardened: float = 0
+        analyzed_route = self.get_path_attributes(graph, path)
+        surfaces = self.get_path_surface_distribution(analyzed_route)
+
+        for surface in hardened_surfaces:
+            if surface in surfaces:     
+                percentage_hardened += surfaces[surface]*1000/path_length
+        return percentage_hardened
+
+        
+              
     def calculate_elevation_diff(self, graph, path) -> float:
         """
         Calculates the total positive elevation difference along a specified path within a graph.
@@ -255,12 +325,13 @@ class Analyzer:
 
             # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index 
             # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
-            height_diffs[path_index] = abs(elevation_diff_input - elevation_diff)
+            height_diffs[path_index] = (abs(elevation_diff_input - elevation_diff))/elevation_diff_input
+            print("percentage matching with input: ", height_diffs[path_index])
             print("__________________________________________________________")
         return height_diffs
     
 
-    def get_paths_and_path_lengths(self, graph, leaf_paths: list) -> list:
+    def get_paths_and_path_lengths(self, graph, leaf_paths: list, start_node) -> list:
         """Gets the paths and path lengths from a list of leaf paths
 
         Args
@@ -291,7 +362,7 @@ class Analyzer:
                     temp_path_lengths.append(self.shortest_path_length(graph, temp_path[i], temp_path[j]))
                     for node in self.planner.shortest_path(graph, temp_path[i], temp_path[j]):
                         path.append(node)
-                    # remove last node because the last in the final casce it adds the last and the last
+                    # remove last node to prevent doubles ( start of next path is end of previous path)
                     path.pop(-1)
                     
                 except nx.exception.NetworkXNoPath:
@@ -301,6 +372,9 @@ class Analyzer:
 
             if path != []:
                 #TODO: take out duplicate nodes between duplicate nodes maybe???
+
+                #add the start node to the end to make a full circle
+                path.append(start_node)
                 paths.append(path)
                 path_lengths.append(sum(temp_path_lengths) * 1000) 
         return paths, path_lengths

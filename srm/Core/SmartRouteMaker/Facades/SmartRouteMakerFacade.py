@@ -168,7 +168,7 @@ class SmartRouteMakerFacade():
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
         start_time = time.time()
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
-        paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths)
+        paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
@@ -225,17 +225,17 @@ class SmartRouteMakerFacade():
             # set the path as the best path and displays
             path = paths[best_path_index]
 
-            #add start node to the end to make full circle
-            path.append(start_node)
             self.visualizer.visualize_best_path(path, graph)
 
             # Get the path length of the best path
             path_length = path_lengths[best_path_index]
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+            percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
             # Visualize the elevation profile of the path with matplotlib
             self.visualizer.visualize_elevations(graph, path)
             print("path length (closest to input) meter: ", round(path_length))
             print("elevation difference: ", elevation_diff)
+            print("percentage hardened: ", percentage_hardened, "%")
 
         # only length
         elif elevation_diff_input == None and percentage_hard_input == None:
