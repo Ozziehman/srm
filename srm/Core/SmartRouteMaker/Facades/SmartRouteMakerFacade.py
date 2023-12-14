@@ -169,13 +169,20 @@ class SmartRouteMakerFacade():
         start_time = time.time()
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
-        #remove faulty routes:
+        
+        #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors:
+        valid_paths = []
+        valid_path_lengths = []
         for path in paths:
             try:
                 self.analyzer.get_path_attributes(graph, path)
+                valid_paths.append(path)
+                valid_path_lengths.append(path_lengths[paths.index(path)])
             except:
-                paths.remove(path)
                 print("removed faulty path")
+                
+        paths = valid_paths
+        path_lengths = valid_path_lengths
 
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
