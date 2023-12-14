@@ -229,8 +229,10 @@ class Visualizer:
 
         """
         percentage *= 100
+        percentage = abs(percentage)
         labels = 'Verhard', 'Onverhard'
         sizes = [percentage, 100-percentage]
+        sizes = [0 if size < 0 else size for size in sizes]  # Ensure sizes are non-negative
         colors = ['gold', 'yellowgreen']
         explode = (0.1, 0) 
         plt.clf()
@@ -241,5 +243,4 @@ class Visualizer:
         save_path = "srm/Core/Static/Image/surface_percentage.png"
         if save_path:
             plt.savefig(save_path, format="png")
-
 
