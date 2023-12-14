@@ -236,7 +236,7 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_best_path(path, graph)
 
             # Get the path length of the best path
-            path_length = path_lengths[best_path_index]
+            path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
             #visualize the percentabe of hardened surfaces
@@ -260,7 +260,7 @@ class SmartRouteMakerFacade():
             print("Best path: ", best_path_index)
             path = paths[best_path_index]
             self.visualizer.visualize_best_path(path, graph)
-            path_length = path_lengths[best_path_index]
+            path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             self.visualizer.visualize_elevations(graph, path)
             self.visualizer.visualize_surface_percentage(percentage_hardened)
