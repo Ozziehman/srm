@@ -317,17 +317,17 @@ class Analyzer:
             temp_path = paths[path_index]
             path_length = path_lengths[path_index]
 
-            print("path length (closest to input) meter: ", path_length)
+            #print("path length (closest to input) meter: ", path_length)
 
             # Get the sum of all upwards elevation changes in the all paths
             elevation_diff = self.calculate_elevation_diff(graph, temp_path)
-            print("elevation difference: ", elevation_diff)
+            #print("elevation difference: ", elevation_diff)
 
             # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index 
             # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
             height_diffs[path_index] = (abs(elevation_diff_input - elevation_diff))/elevation_diff_input
-            print("percentage matching with input: ", height_diffs[path_index])
-            print("__________________________________________________________")
+            #print("percentage matching with height input: ", height_diffs[path_index])
+            #print("__________________________________________________________")
         return height_diffs
     
 
