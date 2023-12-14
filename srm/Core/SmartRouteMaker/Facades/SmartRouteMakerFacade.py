@@ -169,6 +169,14 @@ class SmartRouteMakerFacade():
         start_time = time.time()
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
+        #remove faulty routes:
+        for path in paths:
+            try:
+                self.analyzer.get_path_attributes(graph, path)
+            except:
+                paths.remove(path)
+                print("removed faulty path")
+
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
@@ -231,11 +239,14 @@ class SmartRouteMakerFacade():
             path_length = path_lengths[best_path_index]
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
+            #visualize the percentabe of hardened surfaces
+            self.visualizer.visualize_surface_percentage(percentage_hardened)
             # Visualize the elevation profile of the path with matplotlib
             self.visualizer.visualize_elevations(graph, path)
+            
             print("path length (closest to input) meter: ", round(path_length))
             print("elevation difference: ", elevation_diff)
-            print("percentage hardened: ", percentage_hardened, "%")
+            print("percentage hardened: ", percentage_hardened)
 
         # only length
         elif elevation_diff_input == None and percentage_hard_input == None:
@@ -252,7 +263,11 @@ class SmartRouteMakerFacade():
             path_length = path_lengths[best_path_index]
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             self.visualizer.visualize_elevations(graph, path)
-
+            self.visualizer.visualize_surface_percentage(percentage_hardened)
+            # Visualize the elevation profile of the path with matplotlib
+            self.visualizer.visualize_elevations(graph, path)
+            print("path length (closest to input) meter: ", round(path_length))
+            print("percentage hardened: ", percentage_hardened)
         #endregion
         
         #______________________________________________________________

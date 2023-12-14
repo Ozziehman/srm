@@ -73,7 +73,7 @@ class Analyzer:
             'bridge', 'tunnel', 'oneway', 'lanes', 'ref', 'name',
             'highway', 'maxspeed', 'service', 'access', 'area',
             'landuse', 'width', 'est_width', 'surface', 'junction',
-            'lon', 'lat'
+            'lon', 'lat', 'length', 'grade', 'cycleway', 'footway'
         ]
 
         return ox.utils_graph.get_route_edge_attributes(graph, path)
