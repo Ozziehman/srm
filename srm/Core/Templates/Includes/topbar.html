@@ -91,7 +91,7 @@
                     </svg>                            
                 </div>
                 <!--total elevation -->
-                <input type="text" name="total_elevation_diff" id="total_elevation_diff"
+                <input type="number" name="total_elevation_diff" id="total_elevation_diff"
                     class="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     placeholder="Totale klim">
             </div>
@@ -100,24 +100,27 @@
         <div class="ml-4">
             <div class="relative rounded-md shadow-sm">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-gray-400">
-                        <polyline points="4,20 8,10 12,14 16,8 20,4" stroke="currentColor" fill="none"/>
-                    </svg>                            
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="h-5 w-5 text-gray-400">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"></circle>
+                        <line x1="12" y1="13" x2="12" y2="1" stroke="currentColor"></line>
+                        <line x1="12" y1="12" x2="22" y2="16" stroke="currentColor"></line>
+                    </svg>                
                 </div>
                 <!--total percentage hardened -->
-                <input type="text" name="hardened_percentage" id="hardened_percentage"
+                <input type="number" max="100" name="hardened_percentage" id="hardened_percentage"
                     class="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     placeholder="Gewenste % verhard">
             </div>
         </div>
         
         <div class="ml-4">
-            <button type="submit" class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700 ">
+            <button  type="submit" class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700 ">
                 Bereken route
             </button>
         </div>
         <div class="ml-4">
-            <button type="button" onclick=toggleFunction() class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700">
+            <button style="font-size: small;" type="button" onclick=toggleFunction() class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700">
                 Toggle Circular/Normal Route
             </button>
         </div>

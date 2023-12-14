@@ -16,12 +16,14 @@
 
     <p class="text-white mt-4">
         <span class="font-bold">Type wegdek (<a id="surfaceDistLink" class="underline cursor-pointer" onclick="toggleSurfaceDist()">visualiseer</a>)</span>
-        {% for surface in surfaces %}
-            <div>
-                <div class="h-4 w-4 border border-[{{ surfaceDistLegenda[surface] }}] inline mr-1"></div>
-                <span class="text-white inline">{{ surface }} (~{{ surfaces[surface] }}km)</span>
-            </div>
-        {% endfor %}
+            <div  style="overflow-y: scroll; max-height: 600px;">
+            {% for surface in surfaces %}
+                <div>
+                    <div class="h-4 w-4 border border-[{{ surfaceDistLegenda[surface] }}] inline mr-1"></div>
+                    <span class="text-white inline">{{ surface }} (~{{ surfaces[surface] }}km)</span>
+                </div>
+            {% endfor %}
+        </div>
     </p>
     <p class="text-white mt-4">
         <span class="font-bold">Totale klim (m): </span>
@@ -29,10 +31,11 @@
         <div>
             <span class="text-white inline">{{ elevation_diff }}</span>
         </div>
-        <div id="scrollable-image-div" style="overflow-y: scroll; max-height: 600px;">
+        <div id="scrollable-image-div" style="overflow-y: scroll; max-height: 200px;">
             <!--<img src = "{{ url_for('core.static', filename='Image/leaf_points.png') }}"/>-->
+            
+            <img src = "{{ url_for('core.static', filename='Image/surface_percentage.png') }}"/>
             <hr style="color: white; margin-top: 10px; margin-bottom: 10px;">
-            <img src = "{{ url_for('core.static', filename='Image/best_path_points.png') }}"/>
             <img src = "{{ url_for('core.static', filename='Image/elevation.png') }}"/>
         </div>
     </p>

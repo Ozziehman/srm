@@ -165,13 +165,12 @@ class Visualizer:
         
         fig, ax = plt.subplots()
 
-        # Extract x and y coordinates from nodes
+      
         leaf_x = [graph.nodes[node]["x"] for node in path]
         leaf_y = [graph.nodes[node]["y"] for node in path]
 
-        # Plot the leaf path
         ax.plot(leaf_x, leaf_y, marker='o', linestyle=':')
-        # Set labels and title
+    
         ax.set_xlabel('Longitude')
         ax.set_ylabel('Latitude')
         ax.set_title('Best path')
@@ -219,4 +218,28 @@ class Visualizer:
         plt.grid(True)
         if save_path:
             plt.savefig(save_path, format="png")
+
+    def visualize_surface_percentage(self, percentage):
+        """
+        Visualize the percentage of paved roads and save the plot as an image.
+        Args
+        ----------
+        - percentage (float): The percentage of paved roads.
+
+
+        """
+        percentage *= 100
+        labels = 'Verhard', 'Onverhard'
+        sizes = [percentage, 100-percentage]
+        colors = ['gold', 'yellowgreen']
+        explode = (0.1, 0) 
+        plt.clf()
+        plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+                autopct='%1.1f%%', shadow=False, startangle=140)
+
+        plt.axis('equal')
+        save_path = "srm/Core/Static/Image/surface_percentage.png"
+        if save_path:
+            plt.savefig(save_path, format="png")
+
 
