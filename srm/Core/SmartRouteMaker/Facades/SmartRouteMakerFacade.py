@@ -167,9 +167,10 @@ class SmartRouteMakerFacade():
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
         start_time = time.time()
+        # region get all the full paths from the leafs
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
-        
+        print("total_paths: ", len(paths))
         #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors:
         valid_paths = []
         valid_path_lengths = []
@@ -179,15 +180,17 @@ class SmartRouteMakerFacade():
                 valid_paths.append(path)
                 valid_path_lengths.append(path_lengths[paths.index(path)])
             except:
-                print("removed faulty path")
+                print("removed faulty path, index: ", paths.index(path))
                 
         paths = valid_paths
         path_lengths = valid_path_lengths
-
+        
+        print("valid_paths: ", len(paths))
+        #endregion
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
-
+        
         #______________________________________________________________
 
         # region get the best paths
