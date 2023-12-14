@@ -108,6 +108,8 @@ class Analyzer:
             'compacted',
             'bricks',
             'salt',
+            'compacted',
+            'unhewn_cobblestone',
             'paving_stones'
         ]
 
@@ -171,7 +173,10 @@ class Analyzer:
             'wood',
             'compacted',
             'bricks',
-            'salt'
+            'salt',
+            'compacted',
+            'unhewn_cobblestone',
+            'paving_stones'
         ]
 
         # unhardened surfaces
