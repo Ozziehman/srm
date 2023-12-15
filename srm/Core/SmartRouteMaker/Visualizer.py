@@ -232,7 +232,7 @@ class Visualizer:
         percentage = abs(percentage)
         labels = 'Verhard', 'Onverhard'
         sizes = [percentage, 100-percentage]
-        sizes = [0 if size < 0 else size for size in sizes]  # Ensure sizes are non-negative
+        sizes = [0 if size < 0 else size for size in sizes]  # Be sure of that there are no negative values because i get an error if it is
         colors = ['gold', 'yellowgreen']
         explode = (0.1, 0) 
         plt.clf()
