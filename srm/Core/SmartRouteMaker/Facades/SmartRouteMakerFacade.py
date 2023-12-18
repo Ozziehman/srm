@@ -144,6 +144,7 @@ class SmartRouteMakerFacade():
         start_node = self.graph.closest_node(graph, start_coordinates) #this is the actual center_node( flower center node )
         print("Inputted route length: ", max_length)
         print("Inputted elevation difference: ", elevation_diff_input)
+        print("Inputted percentage hardened: ", percentage_hard_input)
         #endregion
 
         #______________________________________________________________
