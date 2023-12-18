@@ -3,10 +3,12 @@ from flask import Blueprint, render_template, request, url_for
 from .SmartRouteMaker.Facades import SmartRouteMakerFacade as srm
 import ast
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 core = Blueprint('core', __name__,
-    static_folder='Static',
-    static_url_path='/Core/Static',
-    template_folder='Templates')
+    static_folder=os.path.join(dir_path, 'static'),
+    static_url_path='/Core/static',
+    template_folder=os.path.join(dir_path, 'templates'))
 
 @core.route('/')
 def index():
