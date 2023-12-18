@@ -227,10 +227,11 @@ class SmartRouteMakerFacade():
                 
                 percentage_hard_input /= 100 #make it a percentage
                 surface_diffs = self.analyzer.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
-                
+                #TODO: should i really score like this??????
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
-                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index]
+                    print("path index (both): ", path_index, " height_diff: ", height_diffs[path_index], " surface_diff: ", surface_diffs[path_index], " valid_path_length: ", valid_path_lengths[path_index])
+                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + valid_path_lengths[path_index]/max_length #add the scores together
                     print("path index (both): ", path_index, " score: ", paths_with_scores[path_index])
     
             

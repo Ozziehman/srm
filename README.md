@@ -11,7 +11,7 @@ $ pip install -r requirements.txt
 Run the flask app. (development)
 
 ```
-$ flask --app srm run
+$ flask run
 ```
 
 Run the flask app. (production, windows)

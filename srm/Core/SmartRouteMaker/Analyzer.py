@@ -144,7 +144,9 @@ class Analyzer:
                         surfaces_hard_percentage[path_index] += surfaces[surface]*1000/path_lengths[path_index]
 
         for key, value in surfaces_hard_percentage.items():
+            print("index: ", key, "value: ", value)
             surfaces_hard_percentage[key] = abs(percentage_hard_input - value)
+            
   
         return surfaces_hard_percentage
 
@@ -288,7 +290,7 @@ class Analyzer:
 
         # Get the 10 paths closest to the input length and save their indices
         min_length_diff_routes_indices = []
-        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/5)]  # Minimum 10
+        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/2)]  
         min_length_diff_routes_indices.extend(sorted_indices)
 
         print("Routes closest in length: ", min_length_diff_routes_indices)
