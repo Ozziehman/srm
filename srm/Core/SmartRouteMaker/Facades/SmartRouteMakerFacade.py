@@ -194,7 +194,7 @@ class SmartRouteMakerFacade():
         #______________________________________________________________
 
         # region get the best paths
-        #TODO: Clean this mess a bit 🤣 and maybe convert the height diff to percentages, to ensure the same weight for both parameters
+        #TODO: Clean this mess a bit up, it works but its not pretty
 
         if elevation_diff_input != None or percentage_hard_input != None:
             
@@ -236,8 +236,7 @@ class SmartRouteMakerFacade():
             
             
             
-            #TODO Scoring system for multiple parameters could be implemented here in the future, then set the best_path_index to the path with the highest score
-            # get the path with the lowest elevation difference from the "amount" paths closest to the length input
+           # get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
             print("Best path: ", best_path_index)
 
