@@ -3,7 +3,7 @@ import subprocess
 
 def install_and_run():
     try:
-        # Change the current working directory to the directory of this script
+        # change to correct dir
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
         subprocess.run(["pip", "install", "pip"])
