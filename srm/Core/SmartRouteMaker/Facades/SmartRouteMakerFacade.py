@@ -6,6 +6,7 @@ import multiprocessing as mp
 from networkx import MultiDiGraph
 from functools import partial
 from termcolor import colored
+import colorama
 
 from ...SmartRouteMaker import Analyzer
 from ...SmartRouteMaker import Visualizer
@@ -122,6 +123,7 @@ class SmartRouteMakerFacade():
         analysis_options = {"analyze": True, "surface_dist": True}
         route_info = plan_circular_route_flower(start_coords, max_route_length, analysis_options)
         """
+        colorama.init()
         start_time_full = time.time()
         print("flower route")
         #region Initial parameters and variables

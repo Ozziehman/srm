@@ -75,4 +75,3 @@ yapf==0.32.0
 srtm.py==0.3.7
 pywebview==4.4.1
 termcolor==2.4.0
-```
