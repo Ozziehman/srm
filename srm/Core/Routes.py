@@ -21,10 +21,7 @@ def handle_routing():
     #pass the form data to the facade
     start = srmf.normalize_coordinates(request.form['start_point'])
     end = srmf.normalize_coordinates(request.form['end_point'])
-    #total_elevation_diff = srmf.apply_elevation_param(request.form['total_elevation_diff'])
     
-
-
     route = srmf.plan_route(start, end, options={"analyze": True, "surface_dist": True})
 
     return render_template('result.html', 

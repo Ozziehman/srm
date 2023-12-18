@@ -93,7 +93,7 @@ class Graph:
             """
             leaf_nodes.insert(int(round(start_point_index)), start_node)
 
-            # transform list into right order so the start point is in the front
+            # get list into right order so the start point is in the front 
             front_part = leaf_nodes[int(round(start_point_index)):]
             back_part = leaf_nodes[:int(round(start_point_index))]
 

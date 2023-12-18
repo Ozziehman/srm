@@ -110,4 +110,7 @@
         }
 
         return output
+
+
+        Credits: Mervin Hanssen (nederlandse versie)
 '''
