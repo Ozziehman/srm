@@ -5,7 +5,7 @@ import numpy as np
 import multiprocessing as mp
 from networkx import MultiDiGraph
 from functools import partial
-
+from termcolor import colored
 
 from ...SmartRouteMaker import Analyzer
 from ...SmartRouteMaker import Visualizer
@@ -171,7 +171,7 @@ class SmartRouteMakerFacade():
         # region get all the full paths from the leafs
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
-        print("total_paths: ", len(paths))
+        print(colored("total_paths: ", "yellow"), len(paths))
         #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors:
         valid_paths = []
         valid_path_lengths = []
@@ -181,12 +181,12 @@ class SmartRouteMakerFacade():
                 valid_paths.append(path)
                 valid_path_lengths.append(path_lengths[paths.index(path)])
             except:
-                print("removed faulty path, index: ", paths.index(path))
+                print(colored("removed faulty path, index: ", "red"), paths.index(path))
                 
         paths = valid_paths
         path_lengths = valid_path_lengths
         
-        print("valid_paths: ", len(paths))
+        print(colored("valid_paths: ","green"), len(paths))
         #endregion
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
@@ -231,12 +231,10 @@ class SmartRouteMakerFacade():
                 #TODO: should i really score like this??????
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
-                    print("path index (both): ", path_index, " height_diff: ", height_diffs[path_index], " surface_diff: ", surface_diffs[path_index], " valid_path_length: ", valid_path_lengths[path_index])
+                    print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", valid_path_lengths[path_index])
                     paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + valid_path_lengths[path_index]/max_length #add the scores together
-                    print("path index (both): ", path_index, " score: ", paths_with_scores[path_index])
-    
-            
-            
+                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
+                    print("______________________________________________________")
             
            # get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
@@ -247,18 +245,26 @@ class SmartRouteMakerFacade():
 
             self.visualizer.visualize_best_path(path, graph)
 
-            # Get the path length of the best path
+            # results
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
+
             #visualize the percentabe of hardened surfaces
             self.visualizer.visualize_surface_percentage(percentage_hardened)
             # Visualize the elevation profile of the path with matplotlib
             self.visualizer.visualize_elevations(graph, path)
             
-            print("path length (closest to input) meter: ", round(path_length))
-            print("elevation difference: ", elevation_diff)
-            print("percentage hardened: ", percentage_hardened)
+            # terminal message
+            path_length_text = colored("path length (closest to input) meter: ", 'green') + str(round(path_length))
+            elevation_diff_text = colored("elevation difference: ", 'yellow') + str(elevation_diff)
+            percentage_hardened_text = colored("percentage hardened: ", 'blue') + str(percentage_hardened)
+            padding = max(len(path_length_text), len(elevation_diff_text), len(percentage_hardened_text)) + 2
+            print("+" + "-"*padding + "+")
+            print("| " + path_length_text.ljust(padding-1) + "|")
+            print("| " + elevation_diff_text.ljust(padding-1) + "|")
+            print("| " + percentage_hardened_text.ljust(padding-1) + "|")
+            print("+" + "-"*padding + "+")
 
         # only length
         elif elevation_diff_input == None and percentage_hard_input == None:
@@ -272,14 +278,27 @@ class SmartRouteMakerFacade():
             print("Best path: ", best_path_index)
             path = paths[best_path_index]
             self.visualizer.visualize_best_path(path, graph)
+
+            #results
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+            percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
+
             self.visualizer.visualize_elevations(graph, path)
             self.visualizer.visualize_surface_percentage(percentage_hardened)
             # Visualize the elevation profile of the path with matplotlib
             self.visualizer.visualize_elevations(graph, path)
-            print("path length (closest to input) meter: ", round(path_length))
-            print("percentage hardened: ", percentage_hardened)
+            
+            # terminal message
+            path_length_text = colored("path length (closest to input) meter: ", 'green') + str(round(path_length))
+            elevation_diff_text = colored("elevation difference: ", 'yellow') + str(elevation_diff)
+            percentage_hardened_text = colored("percentage hardened: ", 'blue') + str(percentage_hardened)
+            padding = max(len(path_length_text), len(elevation_diff_text), len(percentage_hardened_text)) + 2
+            print("+" + "-"*padding + "+")
+            print("| " + path_length_text.ljust(padding-1) + "|")
+            print("| " + elevation_diff_text.ljust(padding-1) + "|")
+            print("| " + percentage_hardened_text.ljust(padding-1) + "|")
+            print("+" + "-"*padding + "+")
         #endregion
         
         #______________________________________________________________
