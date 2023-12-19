@@ -144,7 +144,7 @@ class Analyzer:
                         surfaces_hard_percentage[path_index] += surfaces[surface]*1000/path_lengths[path_index]
 
         for key, value in surfaces_hard_percentage.items():
-            print("index: ", key, "hardened percentage: ", value)
+            #print("index: ", key, "hardened percentage: ", value)
             surfaces_hard_percentage[key] = abs(percentage_hard_input - value)
             
   
