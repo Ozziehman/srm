@@ -210,7 +210,8 @@ class SmartRouteMakerFacade():
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
                     paths_with_scores[path_index] = height_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
-                    print("path index(length and elev): ", path_index, " score: ", paths_with_scores[path_index])
+                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
+                    print("______________________________________________________")
 
             # only length and surface
             elif percentage_hard_input != None and elevation_diff_input == None:
@@ -220,7 +221,8 @@ class SmartRouteMakerFacade():
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
                     paths_with_scores[path_index] = surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
-                    print("path index (length and surf): ", path_index, " score: ", paths_with_scores[path_index])
+                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
+                    print("______________________________________________________")
 
             # both length, elevation and surface
             elif elevation_diff_input != None and percentage_hard_input != None:
