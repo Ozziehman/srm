@@ -233,8 +233,8 @@ class SmartRouteMakerFacade():
                 #TODO: should i really score like this??????
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
-                    print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", valid_path_lengths[path_index])
-                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + valid_path_lengths[path_index]/max_length #add the scores together
+                    print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", path_lengths[path_index])
+                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
                     print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
                     print("______________________________________________________")
             
