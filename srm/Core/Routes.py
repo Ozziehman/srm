@@ -1,7 +1,9 @@
 import os
-from flask import Blueprint, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 from .SmartRouteMaker.Facades import SmartRouteMakerFacade as srm
 import ast
+import colorama
+from termcolor import colored
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -51,9 +53,11 @@ def handle_circular_routing():
         hardened_percentage = int(request.form['hardened_percentage'])
     except:
         hardened_percentage = None
-        
-    route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, percentage_hard_input = hardened_percentage, options={"analyze": True, "surface_dist": True})
-    
+    try:
+        route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, percentage_hard_input = hardened_percentage, options={"analyze": True, "surface_dist": True})
+    except Exception as e:
+        print(colored(f"Error in plan_circular_route_flower: {e}, going back to index", "red"))
+        return redirect(url_for('core.index'))
 
     return render_template('result.html', 
         surfaces=route['surface_dist'],

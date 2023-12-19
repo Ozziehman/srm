@@ -115,12 +115,12 @@
         </div>
         
         <div class="ml-4">
-            <button  type="submit" class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700 ">
+            <button id="submitbutton" type="submit" class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700 ">
                 Bereken route
             </button>
         </div>
         <div class="ml-4">
-            <button style="font-size: small;" type="button" onclick=toggleFunction() class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700">
+            <button id="submitbutton2" style="font-size: small;" type="button" onclick=toggleFunction() class="inline-flex text-white font-bold items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm shadow-sm hover:bg-blue-700">
                 Toggle Circular/Normal Route
             </button>
         </div>
@@ -135,6 +135,13 @@
 <script>
     document.getElementById("circularRoute").style.display = "none";
 
+    document.getElementById('circularRoute').addEventListener('submit', function() {
+        document.getElementById('submitbutton').disabled = true;
+        document.getElementById('submitbutton').classList.add('bg-gray-400');
+        document.getElementById('submitbutton2').disabled = true;
+        document.getElementById('submitbutton2').classList.add('bg-gray-400');
+    });
+
     function toggleFunction() {
         if (document.getElementById("circularRoute").style.display == "none") {
             document.getElementById("circularRoute").style.display = "block";
@@ -144,4 +151,6 @@
             document.getElementById("normalRoute").style.display = "block";
         }
     }
+
+    
 </script>
