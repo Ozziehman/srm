@@ -209,7 +209,7 @@ class SmartRouteMakerFacade():
                 paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
-                    paths_with_scores[path_index] = height_diffs[path_index]
+                    paths_with_scores[path_index] = height_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
                     print("path index(length and elev): ", path_index, " score: ", paths_with_scores[path_index])
 
             # only length and surface
@@ -219,7 +219,7 @@ class SmartRouteMakerFacade():
                 paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
-                    paths_with_scores[path_index] = surface_diffs[path_index]
+                    paths_with_scores[path_index] = surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
                     print("path index (length and surf): ", path_index, " score: ", paths_with_scores[path_index])
 
             # both length, elevation and surface
@@ -267,6 +267,8 @@ class SmartRouteMakerFacade():
             print("| " + elevation_diff_text.ljust(padding-1) + "|")
             print("| " + percentage_hardened_text.ljust(padding-1) + "|")
             print("+" + "-"*padding + "+")
+
+#___________________________________________________________________________________________________________________
 
         # only length
         elif elevation_diff_input == None and percentage_hard_input == None:
