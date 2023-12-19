@@ -7,6 +7,7 @@ def install_and_run():
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
         subprocess.run(["pip", "install", "pip"])
+        subprocess.run(["pip", "install", "--upgrade", "setuptools"])
         subprocess.run(["pip", "install", "-r", "requirements.txt"])
         subprocess.Popen(["flask", "run"])
     except Exception as e:
