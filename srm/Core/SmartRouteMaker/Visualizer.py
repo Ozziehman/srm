@@ -6,6 +6,8 @@ from typing import Dict, List, OrderedDict
 from networkx import MultiDiGraph
 from matplotlib import pyplot as plt
 import srtm
+from termcolor import colored
+import colorama
 
 class Visualizer:
 
@@ -244,3 +246,13 @@ class Visualizer:
         if save_path:
             plt.savefig(save_path, format="png")
 
+    def final_terminal_message(self, path_length, elevation_diff, percentage_hardened):
+        path_length_text = colored("path length (closest to input) meter: ", 'green') + str(round(path_length))
+        elevation_diff_text = colored("elevation difference: ", 'yellow') + str(elevation_diff)
+        percentage_hardened_text = colored("percentage hardened: ", 'blue') + str(percentage_hardened)
+        padding = max(len(path_length_text), len(elevation_diff_text), len(percentage_hardened_text)) + 2
+        print("+" + "-"*padding + "+")
+        print("| " + path_length_text.ljust(padding-1) + "|")
+        print("| " + elevation_diff_text.ljust(padding-1) + "|")
+        print("| " + percentage_hardened_text.ljust(padding-1) + "|")
+        print("+" + "-"*padding + "+")

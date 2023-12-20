@@ -170,21 +170,12 @@ class SmartRouteMakerFacade():
         # Visualize the leaf points
         self.visualizer.visualize_leaf_points(leaf_paths, graph)
         start_time = time.time()
+        
         # region get all the full paths from the leafs
         # Get all the full paths from the leafs with the lengths, indices match with eachother i.e. path_lengths[2] = paths[2]
         paths, path_lengths = self.analyzer.get_paths_and_path_lengths(graph, leaf_paths, start_node)
 
 
-
-
-
-
-
-
-
-
-
-        #make this seperate function
         print(colored("total_paths: ", "yellow"), len(paths))
         #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors:
         
@@ -203,40 +194,13 @@ class SmartRouteMakerFacade():
        
         print(colored("valid_paths: ","green"), len(paths))
 
-         #---------------------------------
         
-
-
-
-
-
-
-
-
-
-
-
-        #endregion
         end_time = time.time()
         print("Time to calculate all FULL PATHS  ", end_time - start_time)
+        #endregion
         min_length_diff_routes_indeces = self.analyzer.min_length_routes_indeces(paths, path_lengths, max_length, leafs)
         
         #______________________________________________________________
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         # region get the best paths
         #TODO: Clean this mess a bit up, it works but its not pretty
@@ -301,17 +265,7 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_elevations(graph, path)
             
             # terminal message
-            #make this seperate function
-            path_length_text = colored("path length (closest to input) meter: ", 'green') + str(round(path_length))
-            elevation_diff_text = colored("elevation difference: ", 'yellow') + str(elevation_diff)
-            percentage_hardened_text = colored("percentage hardened: ", 'blue') + str(percentage_hardened)
-            padding = max(len(path_length_text), len(elevation_diff_text), len(percentage_hardened_text)) + 2
-            print("+" + "-"*padding + "+")
-            print("| " + path_length_text.ljust(padding-1) + "|")
-            print("| " + elevation_diff_text.ljust(padding-1) + "|")
-            print("| " + percentage_hardened_text.ljust(padding-1) + "|")
-            print("+" + "-"*padding + "+")
-
+            self.visualizer.final_terminal_message(path_length, elevation_diff, percentage_hardened)
 #___________________________________________________________________________________________________________________
 
         # only length
@@ -339,33 +293,9 @@ class SmartRouteMakerFacade():
             
             
             # terminal message
-            #make this seperate function
-            path_length_text = colored("path length (closest to input) meter: ", 'green') + str(round(path_length))
-            elevation_diff_text = colored("elevation difference: ", 'yellow') + str(elevation_diff)
-            percentage_hardened_text = colored("percentage hardened: ", 'blue') + str(percentage_hardened)
-            padding = max(len(path_length_text), len(elevation_diff_text), len(percentage_hardened_text)) + 2
-            print("+" + "-"*padding + "+")
-            print("| " + path_length_text.ljust(padding-1) + "|")
-            print("| " + elevation_diff_text.ljust(padding-1) + "|")
-            print("| " + percentage_hardened_text.ljust(padding-1) + "|")
-            print("+" + "-"*padding + "+")
+            self.visualizer.final_terminal_message(path_length, elevation_diff, percentage_hardened)
         #endregion
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #______________________________________________________________
         end_time_full = time.time()
         print("Total time: ", end_time_full - start_time_full)
