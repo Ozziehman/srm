@@ -14,8 +14,11 @@ Run the flask app. (development)
 $ flask run
 ```
 
-Run the flask app. (production, windows)
+
+
+
+To run the entire application in 1 go, run the following command:
 ```
-$ waitress-serve wsgi:app
+python run.py
 ```
-hosted on localhost:8080
+or simply run the run.py file.
