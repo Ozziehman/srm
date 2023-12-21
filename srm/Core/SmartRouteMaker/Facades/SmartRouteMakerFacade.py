@@ -93,35 +93,43 @@ class SmartRouteMakerFacade():
     def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
 
         """
-        Generates a flower-like route structure on a given graph, where each leaf represents a circular path around the starting node.
-        The algorithm places points on each petal, forming a route that connects them. The number of leafs, points per leaf, and other parameters can be adjusted.
+        Generates a flower-like route structure on a given graph, where each leaf represents a circular path passing the 
+        starting node. The algorithm places points on each leaf, forming a route that connects them. The number of leafs, 
+        points per leaf, and other parameters can be adjusted.
 
         Parameters
         ----------
-        - start_coordinates (tuple): The coordinates (latitude, longitude) of the starting point.
-        - max_length (int): The maximum desired length of the generated route.
-        - elevation_diff_input (int): The maximum desired elevation difference of the generated route.
-        - options (dict): Additional options for analysis and visualization.
+        start_coordinates : tuple
+            The coordinates (latitude, longitude) of the starting point.
+        max_length : int
+            The maximum desired length of the generated route.
+        elevation_diff_input : int
+            The maximum desired elevation difference of the generated route.
+        percentage_hard_input : int
+            The maximum desired percentage of hardened surfaces of the generated route.
+        options : dict
+            Additional options for analysis and visualization.
 
         Returns
         -------
-        Output with all relative information for further analysis and visualization.
+        dict
+            Output with all relative information for further analysis and visualization.
 
-        Functionality
-        -------------
+        Notes
+        -----
         - Generates a circular pattern with a configurable number of leafs around the starting node.
         - Calculates the route by connecting points on each leaf.
         - Evaluates multiple paths and selects the one closest to the specified user input.
         - Performs path analysis, surface distribution analysis, and optionally visualizes the route.
+        - This function is designed for route planning on a graph, considering geographical coordinates and various path attributes.
 
-        Note: This function is designed for route planning on a graph, considering geographical coordinates and various path attributes.
-
-        Example Usage
-        -------------
-        start_coords = (latitude, longitude)
-        max_route_length = 5000  # in meters
-        analysis_options = {"analyze": True, "surface_dist": True}
-        route_info = plan_circular_route_flower(start_coords, max_route_length, analysis_options)
+        Example
+        -------
+        >>> start_coordinates = (latitude, longitude)
+        >>> max_length = the input from the user in meters
+        >>> elevation_diff_input = the input from the user in meters
+        >>> percentage_hard_input = the input from the user in percentage
+        >>> options = {"analyze": True, "surface_dist": True}
         """
         colorama.init()
         start_time_full = time.time()
