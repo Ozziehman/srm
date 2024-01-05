@@ -6,6 +6,7 @@ from .Site.Routes import site
 import webview
 import time
 import logging
+from screeninfo import get_monitors
 
 
 class ServerThread(Thread):
@@ -43,8 +44,9 @@ def create_app():
     server.start()
 
     time.sleep(1)  
-
-    webview.create_window('Smart Route Maker', 'http://127.0.0.1:5000')
+    
+    monitor = get_monitors()[0]
+    webview.create_window('Smart Route Maker', 'http://127.0.0.1:5000', min_size=(monitor.width, monitor.height))
     webview.start()
 
     server.shutdown()
