@@ -22,3 +22,12 @@ To run the entire application in 1 go, run the following command:
 python run.py
 ```
 or simply run the run.py file.
+
+
+NOTES:
+
+Pyinstaller:
+
+pyinstaller -F wsgi.py
+
+now works????
