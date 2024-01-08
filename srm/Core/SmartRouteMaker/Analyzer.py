@@ -290,7 +290,7 @@ class Analyzer:
 
         # Get an amount of paths closest to the inputted leangth of the route
         min_length_diff_routes_indices = []
-        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/2)]  #increase te number to decrease the variation in the route length difference
+        sorted_indices = sorted(path_length_diff, key=path_length_diff.get)[:round(leafs/2)]  #increase te number to decrease the variation in the route length difference and increase the amount of evluated routes
         min_length_diff_routes_indices.extend(sorted_indices)
 
         print("Routes closest in length: ", min_length_diff_routes_indices)

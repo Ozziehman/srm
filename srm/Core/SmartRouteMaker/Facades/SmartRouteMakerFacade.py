@@ -218,6 +218,7 @@ class SmartRouteMakerFacade():
             # Get the best matching path with elevation and length
 
             # only length and elevation
+            # remove "path_lengths[path_index]/max_length" from the score to leave out the length
             if elevation_diff_input != None and percentage_hard_input == None:
                 height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
                 paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
