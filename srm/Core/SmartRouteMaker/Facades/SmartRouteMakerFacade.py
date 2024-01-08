@@ -224,7 +224,9 @@ class SmartRouteMakerFacade():
                 paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
+
                     paths_with_scores[path_index] = height_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+
                     print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
                     print("______________________________________________________")
 
@@ -235,7 +237,9 @@ class SmartRouteMakerFacade():
                 paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
+
                     paths_with_scores[path_index] = surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+
                     print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
                     print("______________________________________________________")
 
@@ -251,7 +255,9 @@ class SmartRouteMakerFacade():
                 for path_index in min_length_diff_routes_indeces:
                     #the lower the score the better, (least difference with input)
                     print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", path_lengths[path_index])
+                    
                     paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+                    
                     print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
                     print("______________________________________________________")
             
