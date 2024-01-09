@@ -151,38 +151,21 @@ class Analyzer:
         -------
         - float: Percentage of hard surfaces along the specified path.
         """
-        # hardened surfaces
+         # hardened surfaces
         hardened_surfaces = [
-            'asphalt',
-            'concrete',
-            'paved',
-            'sett',
-            'tartan',
-            'metal',
-            'wood',
-            'compacted',
-            'bricks',
-            'salt',
-            'compacted',
-            'unhewn_cobblestone',
-            'paving_stones'
+            "asphalt", "paved", "concrete", "paving_stones", "sett",
+            "concrete:plates", "cobblestone", "concrete:lanes", "metal",
+            "grass_paver", "artificial_turf", "tartan", "unhewn_cobblestone",
+            "concrete:flattened", "brick", "bricks", "acrylic", "chipseal",
+            "metal_grid", "cement", "rubber", "hard"
         ]
 
         # unhardened surfaces
         unhardened_surfaces = [
-            'unpaved',
-            'gravel',
-            'dirt',
-            'grass',
-            'sand',
-            'ground',
-            'clay',
-            'earth',
-            'fine_gravel',
-            'mud',
-            'pebblestone',
-            'unknown'
-        ]          
+            "unpaved", "ground", "gravel", "dirt", "grass", "compacted", "sand",
+            "fine_gravel", "wood", "earth", "pebblestone", "mud", "rock", "stone",
+            "woodchips", "dirt/sand", "soil", "trail", "plastic"
+        ]    
         percentage_hardened: float = 0
         analyzed_route = self.get_path_attributes(graph, path)
         surfaces = self.get_path_surface_distribution(analyzed_route)
@@ -388,14 +371,14 @@ class Analyzer:
         - dict: Dictionary where the keys are the indices of the paths in the "paths" list and the values are the scores of the corresponding paths. 
         """
 
-        # remove "path_lengths[path_index]/max_length" from the score to leave out the length
+        # remove "abs(path_lengths[path_index]-max_length)/max_length" from the score to leave out the length
         
         height_diffs = self.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
         paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
         for path_index in min_length_diff_routes_indeces:
             #the lower the score the better, (least difference with input)
 
-            paths_with_scores[path_index] = height_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+            paths_with_scores[path_index] = height_diffs[path_index] + abs(path_lengths[path_index]-max_length)/max_length #add the scores together
 
             print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
             print("______________________________________________________")
@@ -418,7 +401,7 @@ class Analyzer:
         - dict: Dictionary where the keys are the indices of the paths in the "paths" list and the values are the scores of the corresponding paths.
         """
 
-        # remove "path_lengths[path_index]/max_length" from the score to leave out the length
+        # remove "abs(path_lengths[path_index]-max_length)/max_length" from the score to leave out the length
 
         percentage_hard_input /= 100 #make it a percentage
         surface_diffs = self.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
@@ -426,7 +409,7 @@ class Analyzer:
         for path_index in min_length_diff_routes_indeces:
             #the lower the score the better, (least difference with input)
 
-            paths_with_scores[path_index] = surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+            paths_with_scores[path_index] = surface_diffs[path_index] + abs(path_lengths[path_index]-max_length)/max_length #add the scores together
 
             print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
             print("______________________________________________________")
@@ -452,7 +435,7 @@ class Analyzer:
         - dict: Dictionary where the keys are the indices of the paths in the "paths" list and the values are the scores of the corresponding paths.
         """
 
-        # remove "path_lengths[path_index]/max_length" from the score to leave out the length
+        # remove "abs(path_lengths[path_index]-max_length)/max_length" from the score to leave out the length
         
         paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
                 
@@ -465,7 +448,7 @@ class Analyzer:
             #the lower the score the better, (least difference with input)
             print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", path_lengths[path_index])
             
-            paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
+            paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + abs(path_lengths[path_index]-max_length)/max_length #add the scores together
             
             print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
             print("______________________________________________________")
