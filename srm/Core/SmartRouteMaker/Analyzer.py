@@ -97,37 +97,22 @@ class Analyzer:
         -------
         - dict: Dictionary where the keys are the indices of the paths and the values are the absolute differences between the surface distribution of the corresponding path and the inputted percentage of hard surfaces.
         """
+
+        #most used tags according to https://taginfo.openstreetmap.org/keys/surface#values
         # hardened surfaces
         hardened_surfaces = [
-            'asphalt',
-            'concrete',
-            'paved',
-            'sett',
-            'tartan',
-            'metal',
-            'wood',
-            'compacted',
-            'bricks',
-            'salt',
-            'compacted',
-            'unhewn_cobblestone',
-            'paving_stones'
+            "asphalt", "paved", "concrete", "paving_stones", "sett",
+            "concrete:plates", "cobblestone", "concrete:lanes", "metal",
+            "grass_paver", "artificial_turf", "tartan", "unhewn_cobblestone",
+            "concrete:flattened", "brick", "bricks", "acrylic", "chipseal",
+            "metal_grid", "cement", "rubber", "hard"
         ]
 
         # unhardened surfaces
         unhardened_surfaces = [
-            'unpaved',
-            'gravel',
-            'dirt',
-            'grass',
-            'sand',
-            'ground',
-            'clay',
-            'earth',
-            'fine_gravel',
-            'mud',
-            'pebblestone',
-            'unknown'
+            "unpaved", "ground", "gravel", "dirt", "grass", "compacted", "sand",
+            "fine_gravel", "wood", "earth", "pebblestone", "mud", "rock", "stone",
+            "woodchips", "dirt/sand", "soil", "trail", "plastic"
         ]
         
         surfaces_hard_percentage = {}
