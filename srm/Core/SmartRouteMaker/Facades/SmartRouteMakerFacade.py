@@ -133,12 +133,11 @@ class SmartRouteMakerFacade():
         """
         colorama.init()
         start_time_full = time.time()
-        print("flower route")
+        print(f"Route from point {start_coordinates}")
         #region Initial parameters and variables
+
         # Number of circles(leafs) drawn around start as flower
         leafs = 64
-        # Number of points per leaf # TO DO!!!!: make this amount scale with the cicumference of the circle for precision
-        #TODO: make this amount scale with the cicumference of the circle for precision
         points_per_leaf = 5
         
         # calculate the radius the circles(leafs) need to be
@@ -165,7 +164,7 @@ class SmartRouteMakerFacade():
         start_time_leafs = time.time()
         print("spreading load over: ", mp.cpu_count(), " cores")
 
-        # create list of multiple leaf path to evaluate LATER with multiprocessing
+        # create list of multiple leaf paths to evaluate LATER with multiprocessing
         with mp.Pool(mp.cpu_count()) as pool:
             func = partial(self.planner.calculate_leaf_nodes, start_node=start_node, radius=radius, variance=variance, points_per_leaf=points_per_leaf, graph=graph)
             leaf_paths = pool.map(func, flower_angles)
