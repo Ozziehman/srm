@@ -216,50 +216,20 @@ class SmartRouteMakerFacade():
         if elevation_diff_input != None or percentage_hard_input != None:
             
             # Get the best matching path with elevation and length
+            paths_with_scores = {}
 
             # only length and elevation
-            # remove "path_lengths[path_index]/max_length" from the score to leave out the length
+            
             if elevation_diff_input != None and percentage_hard_input == None:
-                height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
-                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
-                for path_index in min_length_diff_routes_indeces:
-                    #the lower the score the better, (least difference with input)
-
-                    paths_with_scores[path_index] = height_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
-
-                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
-                    print("______________________________________________________")
+                paths_with_scores = self.analyzer.get_score_only_elevation(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input, max_length)
 
             # only length and surface
             elif percentage_hard_input != None and elevation_diff_input == None:
-                percentage_hard_input /= 100 #make it a percentage
-                surface_diffs = self.analyzer.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
-                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
-                for path_index in min_length_diff_routes_indeces:
-                    #the lower the score the better, (least difference with input)
-
-                    paths_with_scores[path_index] = surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
-
-                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
-                    print("______________________________________________________")
+                paths_with_scores = self.analyzer.get_score_only_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, max_length)
 
             # both length, elevation and surface
             elif elevation_diff_input != None and percentage_hard_input != None:
-                paths_with_scores = {} #fill the dictionary with paths and scores, the lower the score the better the score indicates the difference between input and output
-                
-                height_diffs = self.analyzer.get_height_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) #calcualte difference betwen input and outcome of height values
-                
-                percentage_hard_input /= 100 #make it a percentage
-                surface_diffs = self.analyzer.get_surface_diffs(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input) #calcualte difference betwen input and outcome of surface values
-                #TODO: should i really score like this??????
-                for path_index in min_length_diff_routes_indeces:
-                    #the lower the score the better, (least difference with input)
-                    print("path index (both): ", path_index, " height diff between in/out put: ", height_diffs[path_index], " surface diff between in/out put: ", surface_diffs[path_index], " path length ", path_lengths[path_index])
-                    
-                    paths_with_scores[path_index] = height_diffs[path_index] + surface_diffs[path_index] + path_lengths[path_index]/max_length #add the scores together
-                    
-                    print(colored("path index (both): ", 'red'), path_index, colored(" score: ", 'red'), colored(paths_with_scores[path_index], "green"))
-                    print("______________________________________________________")
+                paths_with_scores = self.analyzer.get_score_elevation_and_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length)
             
            # get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
