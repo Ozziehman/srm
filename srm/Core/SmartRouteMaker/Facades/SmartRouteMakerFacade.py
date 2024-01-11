@@ -107,9 +107,11 @@ class SmartRouteMakerFacade():
     def plan_circular_route_flower(self, start_coordinates: tuple, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
 
         """
-        Generates a flower-like route structure on a given graph, where each leaf represents a circular path passing the 
-        starting node. The algorithm places points on each leaf, forming a route that connects them. The number of leafs, 
-        points per leaf, and other parameters can be adjusted.
+        Generates a flower-like route structure on a given graph, where each leaf represents a leaf path(a leaf path is a paths of generated nodes 
+        on the drawn circle which will function as a guideline for) passing the 
+        starting node. The algorithm places points on each leaf, forming a route that connects the leaf points. The number of leafs, 
+        points per leaf, and other parameters can be adjusted. The algorithm then evaluated the generated routes and scores them based on Length, elevation difference and 
+        percentage of hardened surface. The route with the lowest score is selected as the best route as that means it is closest to the user input.
 
         Parameters
         ----------
@@ -254,7 +256,6 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_best_path(path, graph)
 
             # results
-            #return these results in seperate function
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
@@ -280,7 +281,6 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_best_path(path, graph)
 
             #results
-            #return these results in seperate function
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)

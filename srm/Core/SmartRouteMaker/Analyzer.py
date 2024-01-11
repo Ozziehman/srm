@@ -233,6 +233,7 @@ class Analyzer:
     def min_length_routes_indeces(self, paths, path_lengths, max_length, leafs) -> list:
         """
         Identifies and returns the indices of the routes with lengths closest to a specified maximum length.
+        This way the amount of routes that need to be scored are reduced.
 
         Args
         ----------
@@ -246,7 +247,7 @@ class Analyzer:
         -------
         - list: Indices of the routes with lengths closest to the specified maximum length this is contextual to the paths list.
 
-        This function returns the leafs/5 routes with lengths closest to the specified maximum length.
+        This function returns the leafs/x routes with lengths closest to the specified maximum length.
 
         Example
         -------
@@ -270,7 +271,7 @@ class Analyzer:
     
     def get_height_diffs(self, graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) -> dict:
         """
-        Calculate the absolute difference between the elevation difference of each path and the inputted elevation difference.
+        Calculate the procentual difference between the elevation difference of each path and the inputted elevation difference.
 
         Parameters
         ----------
@@ -282,7 +283,7 @@ class Analyzer:
 
         Returns
         -------
-        dict: A dictionary where the keys are the indices of the paths and the values are the absolute differences between the elevation difference of the corresponding path and the inputted elevation difference.
+        dict: A dictionary where the keys are the indices of the paths and the values are the procentual differences between the elevation difference of the corresponding path and the inputted elevation difference.
 
         The method calculates the elevation difference for each path in min_length_diff_routes_indeces, and then calculates the absolute difference between this elevation difference and the inputted elevation difference. These differences are stored in a dictionary, which is then returned.
         """
@@ -305,7 +306,7 @@ class Analyzer:
     
 
     def get_paths_and_path_lengths(self, graph, leaf_paths: list, start_node) -> list:
-        """Gets the paths and path lengths from a list of leaf paths
+        """Gets the paths and path lengths from a list of leaf paths. The method makes routes between every points and then glues them together to make a full route.
 
         Args
         ----

@@ -59,7 +59,8 @@ class Planner:
     
     def calculate_leaf_nodes(self, flower_angle, start_node, radius, variance, points_per_leaf, graph: MultiDiGraph):
         """
-        This method generates the nodes for each leaf in a flower-like pattern.
+        This method generates the nodes for each leaf in a flower-like pattern. Each iteration of this function rerurns 1 "incomplete" route.
+        In the main function of the SmartRouteMaker, this function is called multiple times to generate multiple routes.
 
         Parameters
         ----------
@@ -76,7 +77,7 @@ class Planner:
 
         The method first calculates the center of each leaf based on the flower_angle, radius, and variance.
         It then generates a number of points (nodes) evenly spaced around the circumference of each leaf.
-        The nodes are ordered in the list such that the start node is first.
+        The nodes are ordered in the list such that the start node is first (this happens in methods used within this method). 
         """
         #calculate where to put the start point in the circle
         start_point_index = self.calculate_start_point_index(flower_angle, points_per_leaf)

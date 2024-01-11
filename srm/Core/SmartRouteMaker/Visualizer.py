@@ -194,7 +194,7 @@ class Visualizer:
 
         If there is an error retrieving the elevation data for a node, an error message is printed and the node is skipped.
 
-        Note: The method uses the 'y' and 'x' attributes of the nodes in the graph to represent the latitude and longitude, respectively.
+        Note: The method uses the 'y' and 'x' attributes of the nodes in the graph to represent the latitude and longitude.
         """
         elevation_data = srtm.get_data()
         elevation_nodes = []
