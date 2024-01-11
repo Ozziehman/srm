@@ -23,15 +23,20 @@ def handle_routing():
     #pass the form data to the facade
     start = srmf.normalize_coordinates(request.form['start_point'])
     end = srmf.normalize_coordinates(request.form['end_point'])
-    
-    route = srmf.plan_route(start, end, options={"analyze": True, "surface_dist": True})
+
+    try:
+        route = srmf.plan_route(start, end, options={"analyze": True, "surface_dist": True})
+    except Exception as e:
+        print(colored(f"Error in plan_route: {e}, going back to index", "red"))
+        return redirect(url_for('core.index'))
 
     return render_template('result.html', 
         surfaces=route['surface_dist'],
         surfaceDistLegenda=route['surface_dist_legenda'],
         surfaceDistVisualisation=route['surface_dist_visualisation'],
+        path=route['path'],
         path_length=route['path_length'],
-        elevation_nodes=route['elevation_nodes'],
+        elevation_diff=route['elevation_diff'],
         routeVisualisation=route['simple_polylines']
     )
 

@@ -37,7 +37,20 @@ class SmartRouteMakerFacade():
             dict: Route and analysis data.
         """        
 
-        graph = self.graph.full_geometry_point_graph(start_coordinates)
+        print(start_coordinates, end_coordinates)
+        #calculate the point from where the graph should be loaded
+        mid_lat = (start_coordinates[0] + end_coordinates[0]) / 2
+        mid_lon = (start_coordinates[1] + end_coordinates[1]) / 2
+        graph_start_point_coordinates = (mid_lat, mid_lon)
+        print("graph start point", graph_start_point_coordinates)
+        #calculate the radius of the graph from the middlepoint to get the radius to load the graph with
+        loading_radius = (math.sqrt((end_coordinates[1] - start_coordinates[1])**2 + (end_coordinates[0] - start_coordinates[0])**2) * 111000)/2 #to convert to meters
+        print("radius", loading_radius)
+        graph = self.graph.full_geometry_point_graph(graph_start_point_coordinates, radius = loading_radius * 1.1) #create a slightly larger graph than necessary for more headroom
+        start_time = time.time()
+        print("graph loaded.... calculating route")
+        end_time = time.time()
+        print("Time to load graph: ", end_time - start_time)
 
         # Get start/end nodes closest to the coordinates filled in the form
         start_node = self.graph.closest_node(graph, start_coordinates)
@@ -46,14 +59,15 @@ class SmartRouteMakerFacade():
         # Get shortest path between start and end node
         path = self.planner.shortest_path(graph, start_node, end_node)
         self.visualizer.visualize_best_path(path, graph)
-        
 
-        elevation_nodes = self.analyzer.calculate_elevation_diff(graph, path)
+        path_length = self.analyzer.shortest_path_length(graph, start_node, end_node) * 1000    # Convert to meters
+
+        elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
+        percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
+        print(percentage_hardened)
+        self.visualizer.visualize_surface_percentage(percentage_hardened)
         self.visualizer.visualize_elevations(graph, path)
-
-
-        path_length = self.analyzer.shortest_path_length(graph, start_node, end_node)
-
+        
         if "analyze" in options and options['analyze']:
             route_analysis = self.analyzer.get_path_attributes(graph, path)
         else:
@@ -74,7 +88,7 @@ class SmartRouteMakerFacade():
         simple_polylines = self.visualizer.extract_polylines_from_folium_map(graph, path, invert=False)
         output = {
             "start_node": start_node,
-            "end_node": end_node,
+            "end_node": start_node,
             "path": path,
             "path_length": path_length,
             "route_analysis": route_analysis,
@@ -82,7 +96,7 @@ class SmartRouteMakerFacade():
             "surface_dist_visualisation": surface_dist_visualisation,
             "surface_dist_legenda": surface_dist_legenda,
             "simple_polylines": simple_polylines,
-            "elevation_nodes": elevation_nodes
+            "elevation_diff": elevation_diff
         }
 
         return output
@@ -90,7 +104,7 @@ class SmartRouteMakerFacade():
     
 
     # Own algorithm here, flower idea
-    def plan_circular_route_flower(self, start_coordinates, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
+    def plan_circular_route_flower(self, start_coordinates: tuple, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
 
         """
         Generates a flower-like route structure on a given graph, where each leaf represents a circular path passing the 
@@ -270,7 +284,7 @@ class SmartRouteMakerFacade():
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
-
+            print(percentage_hardened)
 
             self.visualizer.visualize_surface_percentage(percentage_hardened)
             self.visualizer.visualize_elevations(graph, path)
