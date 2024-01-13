@@ -285,7 +285,7 @@ class Analyzer:
         -------
         dict: A dictionary where the keys are the indices of the paths and the values are the procentual differences between the elevation difference of the corresponding path and the inputted elevation difference.
 
-        The method calculates the elevation difference for each path in min_length_diff_routes_indeces, and then calculates the absolute difference between this elevation difference and the inputted elevation difference. These differences are stored in a dictionary, which is then returned.
+        The method calculates the elevation difference for each path in min_length_diff_routes_indeces, and then calculates the procentual difference between this elevation difference and the inputted elevation difference. These differences are stored in a dictionary, which is then returned.
         """
         height_diffs = {}
 
