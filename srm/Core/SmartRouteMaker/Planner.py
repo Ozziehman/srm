@@ -26,7 +26,7 @@ class Planner:
 
         return ox.shortest_path(graph, start_node, end_node)
     
-    def calculate_start_point_index(self, flower_angle, points_per_leaf) -> float:
+    def calculate_start_point_index(self, flower_angle: float, points_per_leaf: int) -> float:
         """
         Calculates the index of the start point on a circular structure based on the specified flower angle and points per leaf.
 
@@ -57,7 +57,7 @@ class Planner:
 
         return start_point_index
     
-    def calculate_leaf_nodes(self, flower_angle, start_node, radius, variance, points_per_leaf, graph: MultiDiGraph):
+    def calculate_leaf_nodes(self, flower_angle: float, start_node: int, radius: float, variance: float, points_per_leaf: int, graph: MultiDiGraph) -> list:
         """
         This method generates the nodes for each leaf in a flower-like pattern. Each iteration of this function rerurns 1 "incomplete" route.
         In the main function of the SmartRouteMaker, this function is called multiple times to generate multiple routes.

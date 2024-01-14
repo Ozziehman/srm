@@ -80,7 +80,7 @@ class Analyzer:
         return ox.utils_graph.get_route_edge_attributes(graph, path)
     
 
-    def get_surface_diffs(self, graph, paths: list, path_lengths: list, min_length_diff_routes_indeces, percentage_hard_input) -> dict:
+    def get_surface_diffs(self, graph: MultiDiGraph, paths: list, path_lengths: list, min_length_diff_routes_indeces: int, percentage_hard_input: int) -> dict:
         """
         Calculate the absolute difference between the surface distribution of each path and the inputted percentage of hard surfaces.
         
@@ -137,7 +137,7 @@ class Analyzer:
   
         return surfaces_hard_percentage
 
-    def calculate_percentage_hardened_surfaces(self, graph, path: list, path_length: list) -> float: 
+    def calculate_percentage_hardened_surfaces(self, graph: MultiDiGraph, path: list, path_length: list) -> float: 
         """
         Calculate the percentage of hard surfaces in a path.
 
@@ -177,7 +177,7 @@ class Analyzer:
 
         
               
-    def calculate_elevation_diff(self, graph, path) -> float:
+    def calculate_elevation_diff(self, graph: MultiDiGraph, path: list) -> float:
         """
         Calculates the total positive elevation difference along a specified path within a graph.
 
@@ -230,7 +230,7 @@ class Analyzer:
         return elevation_diff
 
     
-    def min_length_routes_indeces(self, paths, path_lengths, max_length, leafs) -> list:
+    def min_length_routes_indeces(self, paths: list, path_lengths: list, max_length: int, leafs: int) -> list:
         """
         Identifies and returns the indices of the routes with lengths closest to a specified maximum length.
         This way the amount of routes that need to be scored are reduced.
@@ -269,7 +269,7 @@ class Analyzer:
 
         return min_length_diff_routes_indices
     
-    def get_height_diffs(self, graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input) -> dict:
+    def get_height_diffs(self, graph: MultiDiGraph, paths: list, path_lengths: list, min_length_diff_routes_indeces: list, elevation_diff_input: int) -> dict:
         """
         Calculate the procentual difference between the elevation difference of each path and the inputted elevation difference.
 
@@ -305,7 +305,7 @@ class Analyzer:
         return height_diffs
     
 
-    def get_paths_and_path_lengths(self, graph, leaf_paths: list, start_node) -> list:
+    def get_paths_and_path_lengths(self, graph: MultiDiGraph, leaf_paths: list, start_node: int) -> list:
         """Gets the paths and path lengths from a list of leaf paths. The method makes routes between every points and then glues them together to make a full route.
 
         Args
@@ -354,7 +354,7 @@ class Analyzer:
                 path_lengths.append(sum(temp_path_lengths) * 1000) 
         return paths, path_lengths
     
-    def get_score_only_elevation(self, graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input, max_length):
+    def get_score_only_elevation(self, graph: MultiDiGraph, paths: list, path_lengths: list, min_length_diff_routes_indeces: list, elevation_diff_input: int, max_length: int) -> dict:
         """
         Args
         ----------
@@ -385,7 +385,7 @@ class Analyzer:
             print("______________________________________________________")
         return paths_with_scores
 
-    def get_score_only_surface(self, graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, max_length):
+    def get_score_only_surface(self, graph: MultiDiGraph, paths: list, path_lengths: list, min_length_diff_routes_indeces: list, percentage_hard_input: int, max_length: int) -> dict:
         """
         Args
         ----------
@@ -418,7 +418,7 @@ class Analyzer:
         return paths_with_scores
     
 
-    def get_score_elevation_and_surface(self, graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length):
+    def get_score_elevation_and_surface(self, graph: MultiDiGraph, paths: list, path_lengths: list, min_length_diff_routes_indeces: list, percentage_hard_input: int, elevation_diff_input: int, max_length: int):
         """
         Args
         ----------

@@ -67,7 +67,7 @@ class Graph:
         return ox.nearest_nodes(graph, coordinates[1], coordinates[0])     
         # return ox.nearest_nodes(graph, longtitude(x), latitude(y))   
 
-    def insert_start_node_and_rearrange(self, leaf_nodes, start_node, start_point_index) -> list:
+    def insert_start_node_and_rearrange(self, leaf_nodes: list, start_node: int, start_point_index: float) -> list:
             """
             Inserts a start node at a specified index in a list of leaf nodes and rearranges the list to create a circular structure.
 
@@ -110,7 +110,7 @@ class Graph:
     
     
     
-    def export_GPX(self, node_ids) -> Response:
+    def export_GPX(self, node_ids: list) -> Response:
         """Exports a list of node IDs to a GPX file.
         Args
         ----

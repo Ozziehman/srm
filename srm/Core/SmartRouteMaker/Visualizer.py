@@ -180,7 +180,7 @@ class Visualizer:
         if save_path:
             plt.savefig(save_path, format="png")
 
-    def visualize_elevations(self, graph, path):
+    def visualize_elevations(self, graph: MultiDiGraph, path: list) -> None:
         """
         Visualize the elevations of a path and save the plot as an image.
 
@@ -221,7 +221,7 @@ class Visualizer:
         if save_path:
             plt.savefig(save_path, format="png")
 
-    def visualize_surface_percentage(self, percentage):
+    def visualize_surface_percentage(self, percentage: float) -> None:
         """
         Visualize the percentage of paved roads and save the plot as an image.
         Args
