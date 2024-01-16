@@ -103,7 +103,7 @@ class SmartRouteMakerFacade():
 
     
 
-    # Own algorithm here, flower idea
+
     def plan_circular_route_flower(self, start_coordinates: tuple, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
 
         """
@@ -141,11 +141,11 @@ class SmartRouteMakerFacade():
 
         Example
         -------
-        >>> start_coordinates = (latitude, longitude)
-        >>> max_length = the input from the user in meters
-        >>> elevation_diff_input = the input from the user in meters
-        >>> percentage_hard_input = the input from the user in percentage
-        >>> options = {"analyze": True, "surface_dist": True}
+        start_coordinates = (latitude, longitude)
+        max_length = the input from the user in meters
+        elevation_diff_input = the input from the user in meters
+        percentage_hard_input = the input from the user in percentage
+        options = {"analyze": True, "surface_dist": True}
         """
         colorama.init()
         start_time_full = time.time()
@@ -154,11 +154,12 @@ class SmartRouteMakerFacade():
 
         # Number of circles(leafs) drawn around start as flower
         leafs = 64
+        # Amount of points calculated per leaf, increasing this drastically impact performance
         points_per_leaf = 5
         
-        # calculate the radius the circles(leafs) need to be
+        # calculate the radius the circles(leafs) need to be according to the length given by the user
         radius = (max_length) / (2 * math.pi)
-         # Has impact on the size of the circles(leafs)
+        # Variance, to be used to create headroom in the loaded graph
         variance = 1
         additonal_variance = 1.1 #used for loading in a larger graph than necessary for more headroom additive to variance ALWAYS > 1
         
@@ -200,7 +201,7 @@ class SmartRouteMakerFacade():
 
 
         print(colored("total_paths: ", "yellow"), len(paths))
-        #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors:
+        #remove faulty routes, first collect the valid paths and then remove the faulty ones from the original lists to avoid runtime errors then set the lists to their updated versions
         
         valid_paths = []
         valid_path_lengths = []
@@ -225,28 +226,26 @@ class SmartRouteMakerFacade():
         
         #______________________________________________________________
 
-        # region get the best paths
-        #TODO: Clean this mess a bit up, it works but its not pretty
-
+        # region get the best paths based on the user input
         if elevation_diff_input != None or percentage_hard_input != None:
             
             # Get the best matching path with elevation and length
             paths_with_scores = {}
 
-            # only length and elevation
+            # Only length and elevation
             
             if elevation_diff_input != None and percentage_hard_input == None:
                 paths_with_scores = self.analyzer.get_score_only_elevation(graph, paths, path_lengths, min_length_diff_routes_indeces, elevation_diff_input, max_length)
 
-            # only length and surface
+            # Only length and surface
             elif percentage_hard_input != None and elevation_diff_input == None:
                 paths_with_scores = self.analyzer.get_score_only_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, max_length)
 
-            # both length, elevation and surface
+            # Both length, elevation and surface
             elif elevation_diff_input != None and percentage_hard_input != None:
                 paths_with_scores = self.analyzer.get_score_elevation_and_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length)
             
-           # get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
+            # Get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
             print("Best path: ", best_path_index)
 
@@ -255,7 +254,7 @@ class SmartRouteMakerFacade():
 
             self.visualizer.visualize_best_path(path, graph)
 
-            # results
+            # Results
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
@@ -263,24 +262,24 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_surface_percentage(percentage_hardened)
             self.visualizer.visualize_elevations(graph, path)
             
-            # terminal message
+            # Terminal message
             self.visualizer.final_terminal_message(path_length, elevation_diff, percentage_hardened)
 #___________________________________________________________________________________________________________________
 
-        # only length
+        # Only length
         elif elevation_diff_input == None and percentage_hard_input == None:
-            #only go for the best length
+            # Only go for the best length
             path_length_diff = {}
             for path_index in min_length_diff_routes_indeces:
                 temp_path_length = path_lengths[path_index]
                 path_length_diff[path_index] = abs(temp_path_length - max_length)
-            # get path matching the length input the best and show the elevation of the path
+            # Get path matching the length input the best and show the elevation of the path
             best_path_index = min(path_length_diff, key=path_length_diff.get)
             print("Best path: ", best_path_index)
             path = paths[best_path_index]
             self.visualizer.visualize_best_path(path, graph)
 
-            #results
+            # Results
             path_length = round(path_lengths[best_path_index],2)
             elevation_diff = self.analyzer.calculate_elevation_diff(graph, path)
             percentage_hardened = self.analyzer.calculate_percentage_hardened_surfaces(graph, path, path_length)
@@ -290,7 +289,7 @@ class SmartRouteMakerFacade():
             self.visualizer.visualize_elevations(graph, path)
             
             
-            # terminal message
+            # Terminal message
             self.visualizer.final_terminal_message(path_length, elevation_diff, percentage_hardened)
         #endregion
         

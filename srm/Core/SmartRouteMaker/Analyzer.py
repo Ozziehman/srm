@@ -199,7 +199,7 @@ class Analyzer:
         -------
         elevation_difference = calculate_elevation_diff(my_graph_instance, my_path)
         """
-        # get elevation DATA
+        # get elevation data
         elevation_data = srtm.get_data()
         elevation_nodes = []
 
@@ -224,7 +224,7 @@ class Analyzer:
                 if diff > 0:
                     elevation_diff += diff
             except TypeError as e:
-                # Handle error 
+                # Handle error if data is not available of something else goes wrong.
                 print(f"Error in elevation difference calculation: {e}")
 
         return elevation_diff
@@ -290,7 +290,7 @@ class Analyzer:
         height_diffs = {}
 
         #calculate the elevation difference for each path and save it in a dict with the index of the path in the paths list as key
-        #from now on look at only close mathces on length of the route to the user input
+  
         for path_index in min_length_diff_routes_indeces:
             temp_path = paths[path_index]
             path_length = path_lengths[path_index]
@@ -299,8 +299,8 @@ class Analyzer:
             elevation_diff = self.calculate_elevation_diff(graph, temp_path)
             #print("elevation difference: ", elevation_diff)
 
-            # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index 
-            # of the path in the paths list as key, this does not take into account the start node twice(this is added later on)
+            # enter the difference between the elevation difference of the path and the inputted elevation difference into a dict with the index of the path in the paths list as key.
+            
             height_diffs[path_index] = (abs(elevation_diff_input - elevation_diff))/elevation_diff_input
         return height_diffs
     

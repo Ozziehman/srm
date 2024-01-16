@@ -136,7 +136,7 @@ class Graph:
             # dictrionary to the nodeids in correct order
             id_to_element = {str(element['id']): element for element in data['elements'] if element['type'] == 'node'}
 
-            # Create GPX file
+            # make GPX file
             gpx = Element('gpx', attrib={'version': '1.1', 'xmlns': 'http://www.topografix.com/GPX/1/1'})
 
             # iterate through the original order of the node ids
