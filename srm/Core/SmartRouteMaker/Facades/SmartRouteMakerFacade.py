@@ -176,7 +176,7 @@ class SmartRouteMakerFacade():
         #______________________________________________________________
 
         #region Calculate the leaf paths
-        # Generate array of 360 equal sized angles, basically a circle, duhh
+        # Generate array of 360 equal sized angles, basically a circle
         flower_angles = np.linspace(0, 2 * np.pi, leafs)
         start_time_leafs = time.time()
         print("spreading load over: ", mp.cpu_count(), " cores")
