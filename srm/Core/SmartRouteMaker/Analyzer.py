@@ -459,7 +459,7 @@ class Analyzer:
     
     def remove_paths_above_steepness(self, graph: MultiDiGraph, paths: list,  paths_with_scores: dict, min_length_diff_routes_indeces:list, requested_max_steepness: int) -> dict:
         """
-        Calculate the absolute difference between the max steepness of each path and the inputted max steepness.
+        Removes all the paths with a too high steepness from the paths_with_scores dictionary.
 
         Args
         ----------
@@ -509,6 +509,7 @@ class Analyzer:
                     max_steepness = steepness
 
             if max_steepness > requested_max_steepness:
+                print("Removing path with index: ", index, " because it has a steepness of: ", max_steepness, " which is higher than the requested max steepness of: ", requested_max_steepness)
                 del paths_with_scores[index]
         return paths_with_scores
             
