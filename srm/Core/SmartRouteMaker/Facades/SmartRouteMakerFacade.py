@@ -104,7 +104,7 @@ class SmartRouteMakerFacade():
     
 
 
-    def plan_circular_route_flower(self, start_coordinates: tuple, max_length: int, elevation_diff_input: int, percentage_hard_input:int, options: dict) -> dict:
+    def plan_circular_route_flower(self, start_coordinates: tuple, max_length: int, elevation_diff_input: int, percentage_hard_input:int, requested_steepness:int, options: dict) -> dict:
 
         """
         Generates a flower-like route structure on a given graph, where each leaf represents a leaf path(a leaf path is a paths of generated nodes 
@@ -123,6 +123,8 @@ class SmartRouteMakerFacade():
             The maximum desired elevation difference of the generated route.
         percentage_hard_input : int
             The maximum desired percentage of hardened surfaces of the generated route.
+        requested_steepness : int
+            The maximum desired steepness of the generated route. This is a hard cap so the route will never be steeper than this.
         options : dict
             Additional options for analysis and visualization.
 
@@ -171,6 +173,7 @@ class SmartRouteMakerFacade():
         print("Inputted route length: ", max_length)
         print("Inputted elevation difference: ", elevation_diff_input)
         print("Inputted percentage hardened: ", percentage_hard_input)
+        print("Inputted steepness: ", requested_steepness)
         #endregion
 
         #______________________________________________________________
@@ -245,6 +248,12 @@ class SmartRouteMakerFacade():
             elif elevation_diff_input != None and percentage_hard_input != None:
                 paths_with_scores = self.analyzer.get_score_elevation_and_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length)
             
+            print(colored("Amount of paths before removing for steepness: ", "red"), len(paths_with_scores))
+            if requested_steepness != None:
+                #this will be a paths with scores list without the paths that are too steep
+                paths_with_scores = self.analyzer.remove_paths_above_steepness(graph, paths, paths_with_scores, min_length_diff_routes_indeces, requested_steepness)
+            print(colored("Amount of paths below inputted steepness: ", "green"), len(paths_with_scores))
+
             # Get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
             print("Best path: ", best_path_index)

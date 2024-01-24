@@ -6,6 +6,7 @@ import requests
 import srtm
 from termcolor import colored
 from srm.Core.SmartRouteMaker import Planner
+import math
 
 class Analyzer:
     #get the planner in here to use the shortest path function
@@ -455,6 +456,76 @@ class Analyzer:
             print("______________________________________________________")
 
         return paths_with_scores
+    
+    def remove_paths_above_steepness(self, graph: MultiDiGraph, paths: list,  paths_with_scores: dict, min_length_diff_routes_indeces:list, requested_max_steepness: int) -> dict:
+        """
+        Removes all the paths with a too high steepness from the paths_with_scores dictionary.
+
+        Args
+        ----------
+        - self: Instance of the class.
+        - graph: Graph containing nodes and edges.
+        - paths: List of routes.
+        - paths_with_scores: List with all the paths and their scores
+        - min_length_diff_routes_indeces: List of indices of the routes that have minimal length difference to the input.
+        - requested_max_steepness: Inputted max steepness.
+        
+        Returns
+        -------
+        - dict: paths_with_scores with the paths with a too high steepness removed.
+        """
+        # get elevation data
+        elevation_data = srtm.get_data()
+        #key in this is the index of the path in the paths list
+        for index in min_length_diff_routes_indeces:
+            path = paths[index]
+            elevation_nodes = []
+            for graphNode in path:
+                node = graph.nodes[graphNode]
+                nodeLat = node['y']
+                nodeLon = node['x']
+                try:
+                    elevation = elevation_data.get_elevation(nodeLat, nodeLon)
+                    elevation_nodes.append(elevation)
+                except Exception as e:
+                    # Handle case where getting elevation goes wrong
+                    print(f"Error getting elevation for node {graphNode}: {e}")
+
+            # calculate the max steepness occurring in the path
+            max_steepness = 0
+            for i in range(1, len(path)):
+                try:
+                    distance_between_points = nx.shortest_path_length(graph, path[i],path[i-1], weight="length")
+                except Exception as e:
+                    print(e)
+                    break
+
+                elevation_difference = elevation_nodes[i] - elevation_nodes[i-1]
+                # calculate the steepness
+                if distance_between_points != 0:
+                    steepness = elevation_difference/distance_between_points * 100
+                    #print("elevation difference: ", elevation_difference, " distance between points: ", distance_between_points, " steepness: ", steepness)
+                if steepness > 0 and steepness > max_steepness:
+                    max_steepness = steepness
+
+            if max_steepness > requested_max_steepness:
+                print("Removing path with index: ", index, " because it has a steepness of: ", max_steepness, " which is higher than the requested max steepness of: ", requested_max_steepness)
+                del paths_with_scores[index]
+        return paths_with_scores
+            
+
+           
+                
+            
+
+            
+
+        
+            
+            
+        
+        
+
 
 
     

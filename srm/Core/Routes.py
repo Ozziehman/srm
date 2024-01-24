@@ -58,8 +58,14 @@ def handle_circular_routing():
         hardened_percentage = int(request.form['hardened_percentage'])
     except:
         hardened_percentage = None
+
     try:
-        route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, percentage_hard_input = hardened_percentage, options={"analyze": True, "surface_dist": True})
+        requested_steepness = int(request.form['requested_steepness'])
+    except:
+        requested_steepness = None
+
+    try:
+        route = srmf.plan_circular_route_flower(start, max_length, elevation_diff_input = total_elevation_diff, percentage_hard_input = hardened_percentage, requested_steepness = requested_steepness, options={"analyze": True, "surface_dist": True})
     except Exception as e:
         print(colored(f"Error in plan_circular_route_flower: {e}, going back to index", "red"))
         return redirect(url_for('core.index'))
