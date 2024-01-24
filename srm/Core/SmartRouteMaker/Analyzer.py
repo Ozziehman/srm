@@ -6,6 +6,7 @@ import requests
 import srtm
 from termcolor import colored
 from srm.Core.SmartRouteMaker import Planner
+import math
 
 class Analyzer:
     #get the planner in here to use the shortest path function
@@ -455,6 +456,62 @@ class Analyzer:
             print("______________________________________________________")
 
         return paths_with_scores
+    
+    def get_steepness_diffs(self, graph: MultiDiGraph, paths: list,  min_length_diff_routes_indeces: dict, requested_max_steepness: int) -> dict:
+        # get elevation data
+        elevation_data = srtm.get_data()
+        paths_with_steepness_diffs = {}
+
+        for index in min_length_diff_routes_indeces:
+            path = paths[index]
+            elevation_nodes = []
+            for graphNode in path:
+                node = graph.nodes[graphNode]
+                nodeLat = node['y']
+                nodeLon = node['x']
+                try:
+                    elevation = elevation_data.get_elevation(nodeLat, nodeLon)
+                    elevation_nodes.append(elevation)
+                except Exception as e:
+                    # Handle case where getting elevation goes wrong
+                    print(f"Error getting elevation for node {graphNode}: {e}")
+
+            # calculate the max steepness occurring in the path
+            max_steepness = 0
+            for i in range(1, len(path)):
+                try:
+                    distance_between_points = nx.shortest_path_length(graph, path[i],path[i-1], weight="length")
+                except Exception as e:
+                    print(e)
+                    break
+
+                elevation_difference = elevation_nodes[i] - elevation_nodes[i-1]
+                # calculate the steepness
+                if distance_between_points != 0:
+                    steepness = elevation_difference/distance_between_points
+                    #print("elevation difference: ", elevation_difference, " distance between points: ", distance_between_points, " steepness: ", steepness)
+                if steepness > 0 and steepness > max_steepness:
+                    max_steepness = steepness
+
+            print(f"route index: {index}  MaxSteepness: {max_steepness * 100}")
+            paths_with_steepness_diffs[index] = abs(max_steepness - requested_max_steepness)
+        return paths_with_steepness_diffs
+                
+
+            
+
+           
+                
+            
+
+            
+
+        
+            
+            
+        
+        
+
 
 
     

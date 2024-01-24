@@ -245,6 +245,12 @@ class SmartRouteMakerFacade():
             elif elevation_diff_input != None and percentage_hard_input != None:
                 paths_with_scores = self.analyzer.get_score_elevation_and_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length)
             
+            requested_steepness = 50
+            if requested_steepness != None:
+                paths_with_steepness_diffs = self.analyzer.get_steepness_diffs(graph, paths, min_length_diff_routes_indeces, requested_steepness)
+                for index in paths_with_steepness_diffs:
+                    paths_with_scores[index] += paths_with_steepness_diffs[index]
+        
             # Get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
             print("Best path: ", best_path_index)
