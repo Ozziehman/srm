@@ -476,7 +476,6 @@ class Analyzer:
         """
         # get elevation data
         elevation_data = srtm.get_data()
-        #key in this is the index of the path in the paths list
         for index in min_length_diff_routes_indeces:
             path = paths[index]
             elevation_nodes = []
@@ -488,7 +487,6 @@ class Analyzer:
                     elevation = elevation_data.get_elevation(nodeLat, nodeLon)
                     elevation_nodes.append(elevation)
                 except Exception as e:
-                    # Handle case where getting elevation goes wrong
                     print(f"Error getting elevation for node {graphNode}: {e}")
 
             # calculate the max steepness occurring in the path
