@@ -147,6 +147,7 @@ class SmartRouteMakerFacade():
         max_length = the input from the user in meters
         elevation_diff_input = the input from the user in meters
         percentage_hard_input = the input from the user in percentage
+        requested_steepness = the input from the user in percentage
         options = {"analyze": True, "surface_dist": True}
         """
         colorama.init()
