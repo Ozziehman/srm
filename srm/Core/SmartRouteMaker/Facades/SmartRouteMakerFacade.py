@@ -283,9 +283,10 @@ class SmartRouteMakerFacade():
             for path_index in min_length_diff_routes_indeces:
                 temp_path_length = path_lengths[path_index]
                 path_length_diff[path_index] = abs(temp_path_length - max_length)
+            # If the user entered a requested steepness, remove all paths that are too steep  
             if requested_steepness != None:
                 path_length_diff = self.analyzer.remove_paths_above_steepness(graph, paths, path_length_diff, min_length_diff_routes_indeces, requested_steepness)
-                print(path_length_diff, "REMOVED STEEPNESS")
+
             # Get path matching the length input the best and show the elevation of the path
             best_path_index = min(path_length_diff, key=path_length_diff.get)
             print("Best path: ", best_path_index)
