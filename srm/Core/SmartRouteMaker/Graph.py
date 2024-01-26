@@ -133,13 +133,13 @@ class Graph:
         if response.status_code == 200:
             data = response.json()
 
-            # dictrionary to the nodeids in correct order
+            # dictionary mapping node ids to there corresponding data
             id_to_element = {str(element['id']): element for element in data['elements'] if element['type'] == 'node'}
 
             # make GPX file
             gpx = Element('gpx', attrib={'version': '1.1', 'xmlns': 'http://www.topografix.com/GPX/1/1'})
 
-            # iterate through the original order of the node ids
+            # iterate through the original order of the node ids and make sure the GPX file is in that order
             for node_id in node_ids:
                 element = id_to_element.get(str(node_id))
                 if element:
