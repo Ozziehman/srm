@@ -250,11 +250,11 @@ class SmartRouteMakerFacade():
                 paths_with_scores = self.analyzer.get_score_elevation_and_surface(graph, paths, path_lengths, min_length_diff_routes_indeces, percentage_hard_input, elevation_diff_input, max_length)
             
             # If the user entered a requested steepness, remove all paths that are too steep
-            print(colored("Amount of paths before removing for steepness: ", "red"), len(paths_with_scores))
             if requested_steepness != None:
+                print(colored("Amount of paths above inputted steepness: ", "red"), len(paths_with_scores))
                 #this will be a paths with scores list without the paths that are too steep
                 paths_with_scores = self.analyzer.remove_paths_above_steepness(graph, paths, paths_with_scores, min_length_diff_routes_indeces, requested_steepness)
-            print(colored("Amount of paths below inputted steepness: ", "green"), len(paths_with_scores))
+                print(colored("Amount of paths below inputted steepness: ", "green"), len(paths_with_scores))
 
             # Get path with the lowest score, this is the best path (the score is the difference between input and output, so the lower the better)
             best_path_index = min(paths_with_scores, key=paths_with_scores.get)
@@ -286,7 +286,9 @@ class SmartRouteMakerFacade():
                 path_length_diff[path_index] = abs(temp_path_length - max_length)
             # If the user entered a requested steepness, remove all paths that are too steep  
             if requested_steepness != None:
+                print(colored("Amount of paths above inputted steepness: ", "red"), len(path_length_diff))
                 path_length_diff = self.analyzer.remove_paths_above_steepness(graph, paths, path_length_diff, min_length_diff_routes_indeces, requested_steepness)
+                print(colored("Amount of paths below inputted steepness: ", "green"), len(path_length_diff))
 
             # Get path matching the length input the best and show the elevation of the path
             best_path_index = min(path_length_diff, key=path_length_diff.get)
