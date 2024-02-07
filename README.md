@@ -22,3 +22,10 @@ To run the entire application in 1 go, run the following command:
 python run.py
 ```
 or simply run the run.py file.
+
+
+## MAKE EXE
+To update the executable file or to generate one:
+```
+pyinstaller SmartRouteMaker.spec
+```

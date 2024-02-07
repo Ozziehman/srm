@@ -51,7 +51,8 @@ exe = EXE(
     debug=False,
     strip=False,
     upx=True,
-    console=True
+    console=True,
+    icon='srm\Core\Static\ico\srm.ico'
 )
 
 coll = COLLECT(
