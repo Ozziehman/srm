@@ -52,9 +52,8 @@ class Visualizer:
         return polylines
     
     def resource_path(self, relative_path):
-        """ Get absolute path to resource, works for dev and for PyInstaller """
+        """ Get absolute path to resource, used to make fulll relative pathing for exe """
         try:
-            # PyInstaller creates a temp folder and stores path in _MEIPASS
             base_path = sys._MEIPASS
         except Exception:
             base_path = os.path.abspath(".")
