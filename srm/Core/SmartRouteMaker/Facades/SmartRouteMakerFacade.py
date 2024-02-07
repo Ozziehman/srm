@@ -186,9 +186,10 @@ class SmartRouteMakerFacade():
         print("spreading load over: ", mp.cpu_count(), " cores")
 
         # create list of multiple leaf paths to evaluate LATER with multiprocessing
-        with mp.Pool(mp.cpu_count()) as pool:
-            func = partial(self.planner.calculate_leaf_nodes, start_node=start_node, radius=radius, variance=variance, points_per_leaf=points_per_leaf, graph=graph)
-            leaf_paths = pool.map(func, flower_angles)
+        leaf_paths = []
+        for angle in flower_angles:
+            leaf_path = self.planner.calculate_leaf_nodes(angle, start_node=start_node, radius=radius, variance=variance, points_per_leaf=points_per_leaf, graph=graph)
+            leaf_paths.append(leaf_path)
         end_time_leafs = time.time()
         print("Time to calculate all leaf nodes: ", end_time_leafs - start_time_leafs)
         #endregion
