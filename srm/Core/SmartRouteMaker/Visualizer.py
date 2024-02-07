@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import osmnx as ox
 import networkx as nx
 from typing import Dict, List, OrderedDict
@@ -50,6 +51,16 @@ class Visualizer:
         
         return polylines
     
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
+
     def build_surface_dist_visualisation(self, analysedRoute: OrderedDict, graph: MultiDiGraph) -> Dict:
         """Builds a visualisation dictionary from a analysed route ordered dict.
 
@@ -59,8 +70,8 @@ class Visualizer:
         Returns:
             Dict: Visualisation dictionary.
         """        
-
-        with open('./srm/Core/SmartRouteMaker/config/VisualisationSettings.json', 'r') as settings:
+        resource_path_str = self.resource_path('srm/Core/SmartRouteMaker/config/VisualisationSettings.json')
+        with open(resource_path_str, 'r') as settings:
             visualisationSettings = json.load(settings)
 
         visualisation = {}
@@ -113,8 +124,8 @@ class Visualizer:
         Returns:
             str: Hex value of the surface.
         """        
-
-        with open('./srm/Core/SmartRouteMaker/config/VisualisationSettings.json', 'r') as settings:
+        resource_path_str = self.resource_path('srm/Core/SmartRouteMaker/config/VisualisationSettings.json')
+        with open(resource_path_str, 'r') as settings:
             visualisationSettings = json.load(settings)
 
         return visualisationSettings['surfaces'][surface]
@@ -132,7 +143,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Core/Static/Image/leaf_points.png"
+        save_path = self.resource_path("srm/Core/Static/Image/leaf_points.png")
         
         fig, ax = plt.subplots()
 
@@ -163,7 +174,7 @@ class Visualizer:
         -------
         - None
         """
-        save_path = "srm/Core/Static/Image/best_path_points.png"
+        save_path = self.resource_path("srm/Core/Static/Image/best_path_points.png")
         
         fig, ax = plt.subplots()
 
@@ -196,6 +207,7 @@ class Visualizer:
 
         Note: The method uses the 'y' and 'x' attributes of the nodes in the graph to represent the latitude and longitude.
         """
+
         elevation_data = srtm.get_data()
         elevation_nodes = []
         plt.clf()
@@ -212,7 +224,7 @@ class Visualizer:
                 print(f"Error getting elevation for node {graphNode}: {e}")
 
         # Visualize elevation wit matplotlib
-        save_path = "srm/Core/Static/Image/elevation.png"
+        save_path = self.resource_path("srm/Core/Static/Image/elevation.png")
         plt.plot(elevation_nodes, marker='.', linestyle='-', color='b')
         plt.title('Elevation Profile')
         plt.xlabel('Node Index')
@@ -242,7 +254,7 @@ class Visualizer:
                 autopct='%1.1f%%', shadow=False, startangle=140)
 
         plt.axis('equal')
-        save_path = "srm/Core/Static/Image/surface_percentage.png"
+        save_path = self.resource_path("srm/Core/Static/Image/surface_percentage.png")
         if save_path:
             plt.savefig(save_path, format="png")
 
